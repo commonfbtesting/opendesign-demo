@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EC2 Optimization Score Simulator</title>
+  <style>
+    /* ─── Design Tokens (Cathay Pacific DESIGN.md) ─────────────────── */
+    :root {
+      --bg:          #f4f4f0;
+      --white:       #ffffff;
+      --fg:          #1a1a1a;
+      --muted:       #666666;
+      --border:      #e0e0dc;
+      --green-dark:  #1e3a2f;
+      --green-mid:   #2d5a45;
+      --teal:        #006564;
+      --teal-light:  #e8f4f4;
+      --image-bg:    #c8dde8;
+      --danger:      #c0392b;
+      --warn:        #b45309;
+      --success:     #1e3a2f;
+      --font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    /* ─── Reset ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 14px; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ─── Utility bar ─────────────────────────────────────────────────── */
+    .utility-bar {
+      height: 36px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 20px;
+    }
+    .utility-bar a {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--teal);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .utility-bar .util-right {
+      margin-inline-start: auto;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .utility-bar .util-right span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ─── Nav ─────────────────────────────────────────────────────────── */
+    .nav {
+      height: 60px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 32px;
+    }
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo svg { width: 20px; height: 20px; }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--teal);
+      border-bottom-color: var(--teal);
+    }
+    .nav-score-chip {
+      margin-inline-start: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .score-chip {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.01em;
+      transition: background 0.15s, color 0.15s;
+    }
+    .score-chip.good { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal); }
+    .score-chip.warn { background: #fef3c7; color: var(--warn); border: 1px solid #fcd34d; }
+    .score-chip.poor { background: #fee2e2; color: var(--danger); border: 1px solid #fca5a5; }
+
+    /* ─── Page layout ─────────────────────────────────────────────────── */
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+    .page-header {
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--teal);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .page-title {
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+    }
+    .page-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+
+    /* ─── Grid ────────────────────────────────────────────────────────── */
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+    .grid-main { display: grid; grid-template-columns: 340px 1fr; gap: 1px; background: var(--border); margin-bottom: 1px; }
+    .grid-full { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--border); }
+
+    /* ─── Panel (card) ────────────────────────────────────────────────── */
+    .panel {
+      background: var(--white);
+      padding: 24px;
+    }
+    .panel-sm { padding: 18px 20px; }
+    .panel-head {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-head.teal { color: var(--teal); }
+
+    /* ─── Gauge ────────────────────────────────────────────────────────── */
+    .gauge-wrap { text-align: center; margin-bottom: 12px; }
+    .gauge-svg { display: block; margin: 0 auto; }
+    .gauge-bg { fill: none; stroke: var(--border); stroke-width: 14; }
+    .gauge-fill { fill: none; stroke-width: 14; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease, stroke 0.5s ease; }
+    .gauge-score { font-size: 52px; font-weight: 700; text-anchor: middle; dominant-baseline: central; font-family: var(--font); }
+    .gauge-label { font-size: 13px; fill: var(--muted); text-anchor: middle; font-family: var(--font); }
+    .gauge-sub {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    /* ─── Cost block ───────────────────────────────────────────────────── */
+    .cost-block { text-align: center; padding: 16px 0; }
+    .cost-label { font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .cost-value { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
+    .cost-rate { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .cost-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .savings-pill {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--teal);
+      color: var(--teal);
+      background: var(--teal-light);
+      margin-top: 8px;
+    }
+
+    /* ─── Form rows ────────────────────────────────────────────────────── */
+    .form-section-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+    .form-section-label:first-child { margin-top: 0; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-field {
+      background: var(--white);
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .form-field:hover { background: #fafaf8; }
+    .form-field label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .form-field input[type="number"],
+    .form-field select {
+      border: none;
+      outline: none;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--fg);
+      background: transparent;
+      font-family: var(--font);
+      width: 100%;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+    }
+    .form-field select {
+      cursor: pointer;
+    }
+    .form-field input:disabled,
+    .form-field select:disabled {
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+    .form-field.disabled { background: var(--bg); }
+    .form-field.disabled label { opacity: 0.5; }
+
+    /* checkbox row */
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .check-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--teal);
+      cursor: pointer;
+    }
+    .check-row label {
+      font-size: 13px;
+      color: var(--fg);
+      cursor: pointer;
+    }
+
+    /* ─── Slider ────────────────────────────────────────────────────────── */
+    .slider-wrap {
+      padding: 6px 0 2px;
+    }
+    .slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .slider-label { font-size: 11px; color: var(--muted); min-width: 60px; }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      outline: none;
+      border-radius: 0;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      background: var(--teal);
+      border: 2px solid var(--white);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px var(--teal);
+    }
+    input[type="range"]:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    input[type="range"]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
+    .slider-val { font-size: 13px; font-weight: 700; color: var(--fg); min-width: 36px; text-align: end; font-variant-numeric: tabular-nums; }
+    .slider-markers { display: flex; justify-content: space-between; }
+    .slider-marker { font-size: 10px; color: var(--muted); }
+
+    /* ideal marker */
+    .slider-ideal-wrap { position: relative; }
+    .slider-ideal-line {
+      position: absolute;
+      top: 0;
+      width: 2px;
+      height: 12px;
+      background: #1e3a2f;
+      transform: translateX(-50%);
+      border-radius: 1px;
+    }
+    .slider-ideal-label {
+      position: absolute;
+      top: 14px;
+      font-size: 9px;
+      color: #1e3a2f;
+      font-weight: 600;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    /* ─── Factor cards ──────────────────────────────────────────────────── */
+    .factor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 1px; }
+    .factor-panel {
+      background: var(--white);
+      padding: 20px;
+      transition: background 0.15s;
+    }
+    .factor-panel:hover { background: #fafaf8; }
+    .factor-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+    .factor-title { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .factor-score { font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
+    .factor-bar-track { height: 3px; background: var(--border); margin-bottom: 8px; }
+    .factor-bar-fill { height: 3px; transition: width 0.5s ease, background 0.5s ease; }
+    .factor-meta { display: flex; justify-content: space-between; align-items: center; }
+    .factor-weight { font-size: 11px; color: var(--muted); }
+    .factor-contribution { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .factor-desc { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+    /* pill */
+    .pill {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .pill-teal  { border: 1px solid var(--teal); color: var(--teal); background: var(--teal-light); }
+    .pill-warn  { border: 1px solid #fcd34d; color: var(--warn); background: #fef9c3; }
+    .pill-danger{ border: 1px solid #fca5a5; color: var(--danger); background: #fee2e2; }
+    .pill-muted { border: 1px solid var(--border); color: var(--muted); background: var(--bg); }
+
+    /* ─── Formulas section ──────────────────────────────────────────────── */
+    .formula-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+    .formula-panel { background: var(--white); padding: 20px; }
+    .formula-title { font-size: 11px; font-weight: 500; color: var(--teal); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .formula-code {
+      font-family: ui-monospace, 'JetBrains Mono', Menlo, monospace;
+      font-size: 12px;
+      color: var(--fg);
+      line-height: 1.7;
+      background: var(--bg);
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+    }
+
+    /* ─── Warning ───────────────────────────────────────────────────────── */
+    .warning-bar {
+      background: #fef9c3;
+      border: 1px solid #fcd34d;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: var(--warn);
+      margin-bottom: 10px;
+      display: none;
+    }
+    .warning-bar.visible { display: block; }
+
+    /* ─── Section separator ────────────────────────────────────────────── */
+    .section-gap { margin-top: 28px; }
+
+    /* ─── Responsive ────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .grid-main { grid-template-columns: 1fr; }
+      .factor-grid { grid-template-columns: 1fr 1fr; }
+      .formula-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .factor-grid { grid-template-columns: 1fr; }
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .page { padding: 20px 16px 48px; }
+    }
+
+    /* ─── Color helpers ─────────────────────────────────────────────────── */
+    .color-good   { color: var(--teal); }
+    .color-warn   { color: var(--warn); }
+    .color-danger { color: var(--danger); }
+    .color-muted  { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- Utility bar -->
+  <div class="utility-bar">
+    <a href="#">FinOps Tools</a>
+    <div class="util-right">
+      <span>EC2 · us-east-1</span>
+      <span>AWS Cost Optimization</span>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav-logo">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="2" y="2" width="7" height="7" rx="1" fill="#006564"/>
+        <rect x="11" y="2" width="7" height="7" rx="1" fill="#006564" opacity="0.4"/>
+        <rect x="2" y="11" width="7" height="7" rx="1" fill="#006564" opacity="0.4"/>
+        <rect x="11" y="11" width="7" height="7" rx="1" fill="#006564"/>
+      </svg>
+      EC2 Optimization Score Simulator
+    </div>
+    <nav class="nav-links">
+      <a href="#" class="active">Simulator</a>
+      <a href="#">Formulas</a>
+      <a href="#">Docs</a>
+    </nav>
+    <div class="nav-score-chip">
+      <span id="nav-score-chip" class="score-chip good">Score: —</span>
+    </div>
+  </nav>
+
+  <!-- Page -->
+  <main class="page">
+    <div class="page-header">
+      <div class="eyebrow">AWS FinOps · EC2 Cost Optimization</div>
+      <h1 class="page-title">Optimization Score Simulator</h1>
+      <p class="page-desc">Adjust parameters below to simulate your EC2 optimization score. Weights: Cost Optimization 70% · CPU Right-sizing 30%.</p>
+    </div>
+
+    <!-- Main grid: left = gauge + cost; right = inputs -->
+    <div class="grid-main">
+
+      <!-- Left column -->
+      <div style="display:grid;grid-template-rows:auto auto;gap:1px;background:var(--border);">
+        <!-- Gauge panel -->
+        <div class="panel">
+          <div class="panel-head">Overall Optimization Score</div>
+          <div class="gauge-wrap">
+            <svg class="gauge-svg" viewBox="0 0 220 220" width="200" height="200">
+              <circle class="gauge-bg" cx="110" cy="110" r="90"/>
+              <circle class="gauge-fill" id="gauge-fill" cx="110" cy="110" r="90"
+                stroke="#006564"
+                stroke-dasharray="565.49"
+                stroke-dashoffset="565.49"
+                transform="rotate(-90 110 110)"/>
+              <text class="gauge-score" id="gauge-score" x="110" y="105" fill="#006564">—</text>
+              <text class="gauge-label" id="gauge-label" x="110" y="135">—</text>
+            </svg>
+          </div>
+          <p class="gauge-sub" id="gauge-method-note">Weights: Cost Opt (Shutdown) 70% · CPU 30%</p>
+        </div>
+
+        <!-- Cost panel -->
+        <div class="panel">
+          <div class="panel-head">Weekly Cost</div>
+          <div class="cost-block">
+            <div class="cost-label">Base (<span id="cost-base-type">m8g.xlarge</span>)</div>
+            <div class="cost-value" id="cost-base">$—</div>
+            <div class="cost-rate" id="cost-base-rate">—</div>
+          </div>
+          <hr class="cost-divider">
+          <div class="cost-block">
+            <div class="cost-label" id="cost-opt-label">No optimization</div>
+            <div class="cost-value" id="cost-opt">$—</div>
+            <div class="cost-rate" id="cost-opt-rate">—</div>
+          </div>
+          <div style="text-align:center;margin-top:8px;min-height:28px;" id="savings-row"></div>
+        </div>
+      </div>
+
+      <!-- Right column: inputs -->
+      <div class="panel">
+        <div class="panel-head teal">Instance Parameters</div>
+
+        <!-- Instance type -->
+        <div class="form-section-label">Instance Type</div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="current-instance">Current Instance Type</label>
+            <select id="current-instance">
+              <option value="m8g.medium">m8g.medium — $0.04488/hr</option>
+              <option value="m8g.large">m8g.large — $0.08976/hr</option>
+              <option value="m8g.xlarge" selected>m8g.xlarge — $0.17952/hr</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="target-instance">Target Instance Type</label>
+            <select id="target-instance">
+              <option value="m8g.medium">m8g.medium — $0.04488/hr</option>
+              <option value="m8g.large">m8g.large — $0.08976/hr</option>
+              <option value="m8g.xlarge" selected>m8g.xlarge — $0.17952/hr</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- RI Pricing -->
+        <div class="form-section-label">
+          Reserved Instance Pricing
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="ri-applied">
+          <label for="ri-applied">RI Applied — use Reserved Instance pricing for cost score</label>
+        </div>
+        <div class="form-row" id="ri-price-row">
+          <div class="form-field disabled" id="field-ondemand">
+            <label for="ondemand-price">On-Demand Price ($/hr)</label>
+            <input type="number" id="ondemand-price" value="0.17952" step="0.0001" min="0" readonly>
+          </div>
+          <div class="form-field disabled" id="field-ri">
+            <label for="ri-price">RI Price ($/hr)</label>
+            <input type="number" id="ri-price" value="0.06" step="0.0001" min="0" disabled>
+          </div>
+        </div>
+        <div class="slider-wrap" id="ri-slider-wrap" style="margin-bottom:10px;opacity:0.4;pointer-events:none;">
+          <div class="slider-row">
+            <span class="slider-label">RI Discount</span>
+            <input type="range" id="ri-discount" min="0" max="90" step="1" value="50" disabled>
+            <span class="slider-val"><span id="ri-discount-val">50</span>%</span>
+          </div>
+          <div class="slider-markers" style="padding:0 2px;">
+            <span class="slider-marker">0%</span>
+            <span class="slider-marker">30%</span>
+            <span class="slider-marker">60%</span>
+            <span class="slider-marker">90%</span>
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <span id="ri-status-pill" class="pill pill-muted">RI not applied — score: 0</span>
+        </div>
+
+        <!-- Idle & Shutdown -->
+        <div class="form-section-label">Idle Hours &amp; Scheduled Shutdown</div>
+        <div class="form-row">
+          <div class="form-field" id="field-idle">
+            <label for="idle-hours">Detected Idle Hours / Week</label>
+            <input type="number" id="idle-hours" value="56" min="0" max="168" step="1">
+          </div>
+          <div class="form-field" id="field-shutdown">
+            <label for="shutdown-hours">Scheduled Shutdown Hours / Week</label>
+            <input type="number" id="shutdown-hours" value="0" min="0" max="168" step="1">
+          </div>
+        </div>
+        <div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+          <span id="coverage-pill" class="pill pill-warn">Coverage: 0%</span>
+          <div id="over-provision-warn" class="warning-bar">Over-provisioned: shutting down <span id="over-hours">0</span>h during active hours</div>
+        </div>
+
+        <!-- CPU Utilization -->
+        <div class="form-section-label">CPU Utilization — after right-sizing to Target Instance</div>
+        <div class="slider-wrap">
+          <div class="slider-ideal-wrap" style="padding:0 2px;margin-bottom:4px;height:12px;position:relative;">
+            <div class="slider-ideal-line" id="cpu-ideal-line" style="left:60%"></div>
+            <div class="slider-ideal-label" id="cpu-ideal-label" style="left:60%">Ideal: 60%</div>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">Target CPU</span>
+            <input type="range" id="cpu-slider" min="0" max="100" step="1" value="40" disabled>
+            <span class="slider-val"><span id="cpu-val">40</span>%</span>
+          </div>
+          <div class="slider-markers" style="padding:0 2px;">
+            <span class="slider-marker">0%</span>
+            <span class="slider-marker">50%</span>
+            <span class="slider-marker">100%</span>
+          </div>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;" id="cpu-pills"></div>
+      </div>
+    </div>
+
+    <!-- Factor breakdown -->
+    <div class="section-gap">
+      <div class="eyebrow">Factor Breakdown</div>
+      <div class="factor-grid" id="factor-grid">
+        <!-- injected by JS -->
+      </div>
+    </div>
+
+    <!-- Formulas -->
+    <div class="section-gap">
+      <div class="eyebrow">Scoring Formulas</div>
+      <div class="formula-grid">
+        <div class="formula-panel">
+          <div class="formula-title">RI Savings Score</div>
+          <div class="formula-code">if (riApplied):<br>&nbsp;&nbsp;score = 100<br>else:<br>&nbsp;&nbsp;score = 0</div>
+        </div>
+        <div class="formula-panel">
+          <div class="formula-title">Idle Hours Score</div>
+          <div class="formula-code">if (idleHours &lt;= 0): 100<br>if (shutdownHours &lt;= 0): 0<br>else:<br>&nbsp;&nbsp;min(shutdown / idle, 1) × 100</div>
+        </div>
+        <div class="formula-panel">
+          <div class="formula-title">CPU Right-sizing Score</div>
+          <div class="formula-code">if (cpu &lt;= 60):<br>&nbsp;&nbsp;cpu / 60 × 100<br>else:<br>&nbsp;&nbsp;max(0, 100 − (cpu−60) / 40 × 100)</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // ─── Data ──────────────────────────────────────────────────────────────
+    const INSTANCE_PRICES = {
+      'm8g.medium': 0.04488,
+      'm8g.large':  0.08976,
+      'm8g.xlarge': 0.17952
+    };
+    const INSTANCE_CPU = {
+      'm8g.medium': 80,
+      'm8g.large':  60,
+      'm8g.xlarge': 40
+    };
+    const CIRCUMFERENCE = 2 * Math.PI * 90; // ≈ 565.49
+
+    // ─── State ─────────────────────────────────────────────────────────────
+    let state = {
+      currentInstance: 'm8g.xlarge',
+      targetInstance:  'm8g.xlarge',
+      riApplied:       false,
+      riDiscount:      50,
+      idleHours:       56,
+      shutdownHours:   0
+    };
+
+    // ─── Scoring ───────────────────────────────────────────────────────────
+    function calcRiScore(ri) { return ri ? 100 : 0; }
+
+    function calcHoursScore(idle, shutdown) {
+      if (idle <= 0) return 100;
+      if (shutdown <= 0) return 0;
+      return Math.min((shutdown / idle) * 100, 100);
+    }
+
+    function calcCpuScore(cpu) {
+      if (cpu < 0) return 0;
+      if (cpu <= 60) return (cpu / 60) * 100;
+      return Math.max(0, 100 - ((cpu - 60) / 40) * 100);
+    }
+
+    function calcAll() {
+      const { riApplied, idleHours, shutdownHours, targetInstance } = state;
+      const cpu = INSTANCE_CPU[targetInstance] || 60;
+      const riScore    = calcRiScore(riApplied);
+      const hoursScore = calcHoursScore(idleHours, shutdownHours);
+      const cpuScore   = calcCpuScore(cpu);
+      const wCost = 0.7, wCpu = 0.3;
+      const costScore = riApplied ? riScore : hoursScore;
+      const final = wCost * costScore + wCpu * cpuScore;
+      return {
+        final: Math.round(final * 10) / 10,
+        ri:    { score: Math.round(riScore * 10) / 10,    weight: riApplied ? wCost : 0, contribution: riApplied ? Math.round(wCost * riScore * 10) / 10 : 0 },
+        hours: { score: Math.round(hoursScore * 10) / 10, weight: riApplied ? 0 : wCost, contribution: riApplied ? 0 : Math.round(wCost * hoursScore * 10) / 10 },
+        cpu:   { score: Math.round(cpuScore * 10) / 10,   weight: wCpu, contribution: Math.round(wCpu * cpuScore * 10) / 10 },
+        cpuPct: cpu
+      };
+    }
+
+    // ─── Color helpers ──────────────────────────────────────────────────────
+    function scoreColor(s) {
+      if (s < 40) return 'var(--danger)';
+      if (s < 70) return 'var(--warn)';
+      return 'var(--teal)';
+    }
+    function scoreLabel(s) {
+      if (s < 20) return 'Very Poor';
+      if (s < 40) return 'Poor';
+      if (s < 60) return 'Fair';
+      if (s < 80) return 'Good';
+      return 'Excellent';
+    }
+    function scoreChipClass(s) {
+      if (s < 40) return 'poor';
+      if (s < 70) return 'warn';
+      return 'good';
+    }
+    function pillClass(s) {
+      if (s < 40) return 'pill-danger';
+      if (s < 70) return 'pill-warn';
+      return 'pill-teal';
+    }
+
+    // ─── Render ────────────────────────────────────────────────────────────
+    function render() {
+      const r = calcAll();
+      const { riApplied, currentInstance, targetInstance, idleHours, shutdownHours } = state;
+
+      // --- Nav chip
+      const chip = document.getElementById('nav-score-chip');
+      chip.textContent = `Score: ${r.final}`;
+      chip.className = `score-chip ${scoreChipClass(r.final)}`;
+
+      // --- Gauge
+      const offset = CIRCUMFERENCE - (r.final / 100) * CIRCUMFERENCE;
+      const gf = document.getElementById('gauge-fill');
+      gf.setAttribute('stroke-dashoffset', offset);
+      gf.setAttribute('stroke', scoreColor(r.final));
+      document.getElementById('gauge-score').textContent = r.final;
+      document.getElementById('gauge-score').setAttribute('fill', scoreColor(r.final));
+      document.getElementById('gauge-label').textContent = scoreLabel(r.final);
+      document.getElementById('gauge-method-note').textContent =
+        `Weights: Cost Opt ${riApplied ? '(RI)' : '(Shutdown)'} 70% · CPU 30%`;
+
+      // --- Cost panel
+      const currentHourly = INSTANCE_PRICES[currentInstance];
+      const targetHourly  = INSTANCE_PRICES[targetInstance];
+      const onDemandPrice = targetHourly;
+      const riPrice = parseFloat(document.getElementById('ri-price').value) || 0;
+      const baseWeekly = currentHourly * 168;
+      const runningHours = 168 - shutdownHours;
+      const optimizedWeekly = riApplied
+        ? riPrice * 168
+        : targetHourly * runningHours;
+      const savings = baseWeekly - optimizedWeekly;
+      const savingsPct = baseWeekly > 0 ? Math.round((savings / baseWeekly) * 100) : 0;
+
+      document.getElementById('cost-base-type').textContent = currentInstance;
+      document.getElementById('cost-base').textContent = `$${baseWeekly.toFixed(2)}`;
+      document.getElementById('cost-base-rate').textContent = `$${currentHourly.toFixed(4)}/hr × 168h`;
+
+      document.getElementById('cost-opt-label').textContent = riApplied
+        ? 'RI Applied'
+        : shutdownHours > 0 ? `Running ${runningHours}h/week` : 'No optimization';
+      document.getElementById('cost-opt').textContent = `$${optimizedWeekly.toFixed(2)}`;
+      document.getElementById('cost-opt-rate').textContent = riApplied
+        ? `$${riPrice.toFixed(4)}/hr × 168h`
+        : `$${targetHourly.toFixed(4)}/hr × ${runningHours}h`;
+      document.getElementById('cost-opt').style.color = savings > 0 ? 'var(--teal)' : 'var(--fg)';
+
+      const savRow = document.getElementById('savings-row');
+      savRow.innerHTML = savings > 0
+        ? `<span class="savings-pill">Savings: $${savings.toFixed(2)}/week (${savingsPct}%)</span>`
+        : '';
+
+      // --- RI status pill
+      const riPill = document.getElementById('ri-status-pill');
+      if (riApplied) {
+        const sav = onDemandPrice > 0 ? Math.round(((onDemandPrice - riPrice) / onDemandPrice) * 100) : 0;
+        riPill.className = `pill ${sav > 0 ? 'pill-teal' : 'pill-muted'}`;
+        riPill.textContent = `Savings: ${sav}% vs On-Demand`;
+      } else {
+        riPill.className = 'pill pill-muted';
+        riPill.textContent = 'RI not applied — score: 0';
+      }
+
+      // --- Coverage pill
+      const totalCoverage = idleHours > 0
+        ? Math.round((shutdownHours / idleHours) * 100)
+        : 100;
+      const coverPill = document.getElementById('coverage-pill');
+      coverPill.textContent = `Coverage: ${totalCoverage}%`;
+      coverPill.className = `pill ${shutdownHours > idleHours ? 'pill-danger' : shutdownHours >= idleHours ? 'pill-teal' : 'pill-warn'}`;
+
+      const overWarn = document.getElementById('over-provision-warn');
+      if (shutdownHours > idleHours) {
+        overWarn.classList.add('visible');
+        document.getElementById('over-hours').textContent = shutdownHours - idleHours;
+      } else {
+        overWarn.classList.remove('visible');
+      }
+
+      // --- CPU slider display
+      const cpuPct = r.cpuPct;
+      document.getElementById('cpu-slider').value = cpuPct;
+      document.getElementById('cpu-val').textContent = cpuPct;
+
+      const cpuPillsEl = document.getElementById('cpu-pills');
+      cpuPillsEl.innerHTML = '';
+      const currentCpu = INSTANCE_CPU[currentInstance] || 60;
+      const pill1 = document.createElement('span');
+      pill1.className = 'pill pill-muted';
+      pill1.textContent = `${currentCpu}% CPU (current: ${currentInstance})`;
+      cpuPillsEl.appendChild(pill1);
+      if (targetInstance !== currentInstance) {
+        const pill2 = document.createElement('span');
+        pill2.className = `pill ${pillClass(r.cpu.score)}`;
+        pill2.textContent = `${cpuPct}% CPU (target: ${targetInstance})`;
+        cpuPillsEl.appendChild(pill2);
+      }
+
+      // --- Factor cards
+      const factors = [
+        {
+          id: 'ri', title: 'RI Savings',
+          score: r.ri.score, weight: r.ri.weight, contribution: r.ri.contribution,
+          desc: riApplied
+            ? `${Math.round(((onDemandPrice - riPrice) / onDemandPrice) * 100)}% savings vs On-Demand`
+            : 'Not applied — enable RI to activate this factor'
+        },
+        {
+          id: 'hours', title: 'Idle Hours Coverage',
+          score: r.hours.score, weight: r.hours.weight, contribution: r.hours.contribution,
+          desc: `${shutdownHours}h scheduled / ${idleHours}h idle detected`
+        },
+        {
+          id: 'cpu', title: 'Right-sizing (CPU)',
+          score: r.cpu.score, weight: r.cpu.weight, contribution: r.cpu.contribution,
+          desc: `${cpuPct}% CPU utilization — target: 60%`
+        }
+      ];
+      const fg = document.getElementById('factor-grid');
+      fg.innerHTML = factors.map(f => `
+        <div class="factor-panel">
+          <div class="factor-top">
+            <span class="factor-title">${f.title}</span>
+            <span class="factor-score" style="color:${scoreColor(f.score)}">${f.score}</span>
+          </div>
+          <div class="factor-bar-track">
+            <div class="factor-bar-fill" style="width:${f.score}%;background:${scoreColor(f.score)}"></div>
+          </div>
+          <div class="factor-meta">
+            <span class="factor-weight">Weight: ${(f.weight * 100).toFixed(0)}%</span>
+            <span class="factor-contribution" style="color:${scoreColor(f.score)}">+${f.contribution} pts</span>
+          </div>
+          <div class="factor-desc">${f.desc}</div>
+        </div>
+      `).join('');
+    }
+
+    // ─── Wire up controls ──────────────────────────────────────────────────
+    document.getElementById('current-instance').addEventListener('change', e => {
+      state.currentInstance = e.target.value;
+      render();
+    });
+
+    document.getElementById('target-instance').addEventListener('change', e => {
+      state.targetInstance = e.target.value;
+      const price = INSTANCE_PRICES[e.target.value];
+      document.getElementById('ondemand-price').value = price.toFixed(5);
+      if (state.riApplied) {
+        const riPriceVal = Math.round(price * (1 - state.riDiscount / 100) * 100000) / 100000;
+        document.getElementById('ri-price').value = riPriceVal;
+      }
+      render();
+    });
+
+    document.getElementById('ri-applied').addEventListener('change', e => {
+      state.riApplied = e.target.checked;
+      const enabled = state.riApplied;
+
+      // RI price field
+      const fieldRi = document.getElementById('field-ri');
+      const fieldOd = document.getElementById('field-ondemand');
+      const riPriceInput = document.getElementById('ri-price');
+      const riSliderWrap = document.getElementById('ri-slider-wrap');
+      const riDiscountInput = document.getElementById('ri-discount');
+      const idleField = document.getElementById('field-idle');
+      const shutdownField = document.getElementById('field-shutdown');
+      const idleInput = document.getElementById('idle-hours');
+      const shutdownInput = document.getElementById('shutdown-hours');
+
+      if (enabled) {
+        fieldRi.classList.remove('disabled');
+        fieldOd.classList.remove('disabled');
+        riPriceInput.disabled = false;
+        riSliderWrap.style.opacity = '1';
+        riSliderWrap.style.pointerEvents = 'auto';
+        riDiscountInput.disabled = false;
+        // auto-set ri price
+        const od = parseFloat(document.getElementById('ondemand-price').value);
+        const rp = Math.round(od * (1 - state.riDiscount / 100) * 100000) / 100000;
+        riPriceInput.value = rp;
+        // disable shutdown
+        idleField.classList.add('disabled');
+        shutdownField.classList.add('disabled');
+        idleInput.disabled = true;
+        shutdownInput.disabled = true;
+        state.shutdownHours = 0;
+        shutdownInput.value = 0;
+      } else {
+        fieldRi.classList.add('disabled');
+        riPriceInput.disabled = true;
+        riSliderWrap.style.opacity = '0.4';
+        riSliderWrap.style.pointerEvents = 'none';
+        riDiscountInput.disabled = true;
+        idleField.classList.remove('disabled');
+        shutdownField.classList.remove('disabled');
+        idleInput.disabled = false;
+        shutdownInput.disabled = false;
+      }
+      render();
+    });
+
+    document.getElementById('ri-price').addEventListener('input', e => {
+      const val = Math.max(0, parseFloat(e.target.value) || 0);
+      const od = parseFloat(document.getElementById('ondemand-price').value);
+      if (od > 0) {
+        state.riDiscount = Math.round((1 - val / od) * 100);
+        document.getElementById('ri-discount').value = state.riDiscount;
+        document.getElementById('ri-discount-val').textContent = state.riDiscount;
+      }
+      render();
+    });
+
+    document.getElementById('ri-discount').addEventListener('input', e => {
+      state.riDiscount = parseInt(e.target.value);
+      document.getElementById('ri-discount-val').textContent = state.riDiscount;
+      const od = parseFloat(document.getElementById('ondemand-price').value);
+      const rp = Math.round(od * (1 - state.riDiscount / 100) * 100000) / 100000;
+      document.getElementById('ri-price').value = rp;
+      render();
+    });
+
+    document.getElementById('idle-hours').addEventListener('input', e => {
+      state.idleHours = Math.max(0, Math.min(168, parseInt(e.target.value) || 0));
+      render();
+    });
+    document.getElementById('shutdown-hours').addEventListener('input', e => {
+      state.shutdownHours = Math.max(0, Math.min(168, parseInt(e.target.value) || 0));
+      render();
+    });
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
