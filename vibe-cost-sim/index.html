@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vibe Coding Platform — Cost Simulator</title>
+<style>
+/* ── Design tokens ────────────────────────────────────────────────────── */
+:root {
+  --bg:         #f4f4f0;
+  --white:      #ffffff;
+  --fg:         #1a1a1a;
+  --muted:      #666666;
+  --border:     #e0e0dc;
+  --green-dark: #1e3a2f;
+  --teal:       #006564;
+  --font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  --radius-pill: 20px;
+}
+[data-theme="dark"] {
+  --bg:         #111111;
+  --white:      #1c1c1c;
+  --fg:         #f0f0ec;
+  --muted:      #999999;
+  --border:     #2a2a2a;
+  --green-dark: #2d5a45;
+  --teal:       #4db8b7;
+}
+
+/* ── Reset ────────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--fg);font-size:14px;line-height:1.5;min-height:100vh;transition:background 0.15s,color 0.15s}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+
+/* ── Utility bar ──────────────────────────────────────────────────────── */
+.util-bar{height:36px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px}
+.util-bar a{font-size:12px;font-weight:500;color:var(--teal);text-decoration:none}
+.util-bar-right{margin-left:auto;display:flex;gap:16px;align-items:center}
+.util-bar-right span{font-size:12px;font-weight:500;color:var(--muted)}
+
+/* ── Nav ──────────────────────────────────────────────────────────────── */
+nav{height:60px;background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;display:flex;align-items:center;padding:0 24px;gap:24px}
+.nav-logo{font-size:20px;font-weight:700;letter-spacing:-0.3px;color:var(--fg)}
+.nav-logo span{color:var(--teal)}
+.nav-links{display:flex;gap:0;margin-left:auto}
+.nav-links a{font-size:14px;font-weight:400;color:var(--muted);text-decoration:none;padding:0 16px;height:60px;display:flex;align-items:center;transition:color 0.15s}
+.nav-links a:hover{color:var(--teal)}
+.theme-toggle{display:flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--border);border-radius:var(--radius-pill);font-size:12px;font-weight:500;color:var(--muted);background:var(--white);transition:all 0.15s}
+.theme-toggle:hover{color:var(--teal);border-color:var(--teal)}
+
+/* ── Toggle switch ────────────────────────────────────────────────────── */
+.toggle-track{display:inline-flex;width:40px;height:22px;border-radius:11px;background:var(--border);position:relative;transition:background 0.2s;cursor:pointer;border:none;flex-shrink:0}
+.toggle-track.on{background:var(--green-dark)}
+.toggle-thumb{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--white);top:2px;left:2px;transition:transform 0.2s}
+.toggle-track.on .toggle-thumb{transform:translateX(18px)}
+
+/* ── Page ─────────────────────────────────────────────────────────────── */
+.page{max-width:1200px;margin:0 auto;padding:40px 24px 80px}
+.page-header{margin-bottom:32px}
+.page-header h1{font-size:clamp(22px,3vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.15}
+.page-header p{font-size:13px;font-weight:500;color:var(--teal);margin-top:4px}
+
+/* ── Grid ─────────────────────────────────────────────────────────────── */
+.main-grid{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+@media(max-width:900px){.main-grid{grid-template-columns:1fr}}
+
+/* ── Card base ────────────────────────────────────────────────────────── */
+.card{background:var(--white);border:1px solid var(--border)}
+
+/* ── Summary strip ────────────────────────────────────────────────────── */
+.summary-strip{display:grid;grid-template-columns:1fr 1fr;background:var(--white);border:1px solid var(--border);margin-bottom:24px}
+.summary-cell{padding:24px 28px;border-right:1px solid var(--border)}
+.summary-cell:last-child{border-right:none}
+.sc-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+.sc-value{font-size:clamp(28px,3.5vw,40px);font-weight:700;letter-spacing:-0.5px;line-height:1;font-variant-numeric:tabular-nums}
+.sc-sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* ── Pie card ─────────────────────────────────────────────────────────── */
+.chart-card{padding:24px 28px;margin-bottom:24px}
+.sec-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
+.pie-wrap{display:flex;align-items:center;gap:32px}
+.pie-svg{flex-shrink:0}
+.pie-legend{display:flex;flex-direction:column;gap:12px}
+.legend-item{display:flex;align-items:center;gap:10px;font-size:13px}
+.legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.legend-val{font-weight:600;margin-left:auto;padding-left:12px;font-variant-numeric:tabular-nums}
+
+/* ── Table ────────────────────────────────────────────────────────────── */
+.table-card{margin-bottom:24px;overflow:hidden}
+.table-card .sec-label{padding:20px 24px 0}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px 24px;text-align:left;font-size:13px;border-bottom:1px solid var(--border)}
+th{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+td:last-child{text-align:right;font-weight:500;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(0,0,0,.02)}
+
+/* ── Controls ─────────────────────────────────────────────────────────── */
+.controls-card{padding:0;overflow:hidden}
+.ctrl-section{border-bottom:1px solid var(--border)}
+.ctrl-section:last-child{border-bottom:none}
+.ctrl-section-head{padding:14px 20px;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;background:var(--bg)}
+.ctrl-row{padding:14px 20px;border-top:1px solid var(--border)}
+.ctrl-row:hover{background:rgba(0,0,0,.02)}
+.ctrl-row-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.ctrl-label{font-size:12px;font-weight:500;color:var(--fg)}
+.ctrl-value{font-size:14px;font-weight:500;color:var(--teal);font-variant-numeric:tabular-nums}
+/* Range slider */
+input[type="range"]{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:4px;
+  background:var(--border);border-radius:2px;
+  outline:none;cursor:pointer;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--green-dark);
+  border:2px solid var(--white);
+  box-shadow:0 0 0 1px var(--border);
+}
+input[type="range"]::-moz-range-thumb{
+  width:14px;height:14px;border-radius:50%;
+  background:var(--green-dark);border:2px solid var(--white);
+  border:none;
+}
+.ctrl-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border)}
+.ctrl-toggle-label{font-size:12px;font-weight:500;color:var(--fg)}
+.ctrl-radio-group{display:flex;margin-top:8px}
+.ctrl-radio{flex:1;padding:8px 12px;font-size:12px;font-weight:500;text-align:center;border:1px solid var(--border);cursor:pointer;transition:all .15s;color:var(--muted);background:var(--white)}
+.ctrl-radio.active{background:var(--green-dark);color:#fff;border-color:var(--green-dark)}
+.ctrl-radio+.ctrl-radio{border-left:none}
+
+/* ── Assumptions ──────────────────────────────────────────────────────── */
+.assumptions-card{padding:24px 28px}
+.assumptions-card ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 32px;margin-top:16px}
+@media(max-width:640px){.assumptions-card ul{grid-template-columns:1fr}}
+.assumptions-card li{font-size:13px;color:var(--muted);padding-left:12px;position:relative}
+.assumptions-card li::before{content:'·';position:absolute;left:0;color:var(--teal)}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media(max-width:640px){
+  nav .nav-links{display:none}
+  .summary-strip{grid-template-columns:1fr}
+  .summary-cell{border-right:none;border-bottom:1px solid var(--border)}
+  .summary-cell:last-child{border-bottom:none}
+  .pie-wrap{flex-direction:column;gap:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- Utility bar -->
+<div class="util-bar">
+  <a href="#">Vibe Coding Platform</a>
+  <div class="util-bar-right">
+    <span>Cost Simulator v1.0</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">Vibe <span>Cost</span> Sim</div>
+  <div class="nav-links">
+    <a href="#">Simulator</a>
+    <a href="#">Docs</a>
+    <a href="#">GitHub</a>
+  </div>
+  <button class="theme-toggle" id="themeBtn" aria-label="Toggle dark mode">
+    <span id="themeIcon">☀</span>
+    <span id="themeLabel">Light</span>
+  </button>
+</nav>
+
+<!-- Page -->
+<div class="page">
+  <div class="page-header">
+    <h1>Monthly &amp; Yearly Cost Simulator</h1>
+    <p>Vibe Coding Platform — OpenClaw on EC2</p>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- ── Left column ───────────────────────────────────────────────── -->
+    <div>
+
+      <!-- Summary -->
+      <div class="summary-strip">
+        <div class="summary-cell">
+          <div class="sc-label">Monthly Total</div>
+          <div class="sc-value" id="totalMo">$—</div>
+          <div class="sc-sub">model + hosting</div>
+        </div>
+        <div class="summary-cell">
+          <div class="sc-label">Yearly Total</div>
+          <div class="sc-value" id="totalYr">$—</div>
+          <div class="sc-sub">× 12 months</div>
+        </div>
+      </div>
+
+      <!-- Pie -->
+      <div class="card chart-card">
+        <div class="sec-label">Cost Split — Monthly</div>
+        <div class="pie-wrap">
+          <svg class="pie-svg" id="pieSvg" width="140" height="140" viewBox="0 0 140 140"></svg>
+          <div class="pie-legend">
+            <div class="legend-item">
+              <div class="legend-dot" id="dotModel"></div>
+              <span>Model</span>
+              <span class="legend-val" id="legModel">—</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" id="dotHosting"></div>
+              <span>Hosting (EC2)</span>
+              <span class="legend-val" id="legHosting">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="card table-card">
+        <div class="sec-label">Detailed Breakdown</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th style="text-align:right">Value</th>
+            </tr>
+          </thead>
+          <tbody id="breakdownBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Assumptions -->
+      <div class="card assumptions-card">
+        <div class="sec-label">Assumptions</div>
+        <ul>
+          <li>20 working days / month</li>
+          <li>10 working hours / day per machine</li>
+          <li>14 non-working hours / day (1 always-on machine)</li>
+          <li>1.3× scaling buffer on working machines</li>
+          <li>EC2 c4.2xlarge — 8 vCPUs, 16 GB RAM</li>
+          <li>OpenClaw — 1 vCPU + 2 GB RAM per instance</li>
+          <li>Sessions counted on working days only</li>
+          <li>Spot price used when spot mode enabled</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ── Right column: controls ────────────────────────────────────── -->
+    <div class="card controls-card">
+
+      <!-- Usage Pattern -->
+      <div class="ctrl-section">
+        <div class="ctrl-section-head">Usage Pattern</div>
+
+        <div class="ctrl-row">
+          <div class="ctrl-row-header">
+            <span class="ctrl-label">Number of Users</span>
+            <span class="ctrl-value" id="dv-users">50</span>
+          </div>
+          <input type="range" id="sl-users" min="0" max="1000" step="50" value="50">
+        </div>
+
+        <div class="ctrl-row">
+          <div class="ctrl-row-header">
+            <span class="ctrl-label">Requests / User / session</span>
+            <span class="ctrl-value" id="dv-reqPerUser">10</span>
+          </div>
+          <input type="range" id="sl-reqPerUser" min="1" max="20" step="1" value="10">
+        </div>
+
+        <div class="ctrl-row">
+          <div class="ctrl-row-header">
+            <span class="ctrl-label">Sessions / User / day</span>
+            <span class="ctrl-value" id="dv-sessionsPerUser">4</span>
+          </div>
+          <input type="range" id="sl-sessionsPerUser" min="1" max="8" step="1" value="4">
+        </div>
+
+        <div class="ctrl-row">
+          <div class="ctrl-row-header">
+            <span class="ctrl-label">Session Duration (hrs)</span>
+            <span class="ctrl-value" id="dv-sessionHrs">1 hr</span>
+          </div>
+          <input type="range" id="sl-sessionHrs" min="1" max="8" step="1" value="1">
+        </div>
+
+        <div class="ctrl-row">
+          <div class="ctrl-row-header">
+            <span class="ctrl-label">Ave Credit / Request</span>
+            <span class="ctrl-value" id="dv-creditsPerReq">500k</span>
+          </div>
+          <input type="range" id="sl-creditsPerReq" min="0.1" max="5" step="0.1" value="0.5">
+        </div>
+      </div>
+
+      <!-- Hosting -->
+      <div class="ctrl-section">
+        <div class="ctrl-section-head">Hosting (EC2)</div>
+
+        <div class="ctrl-toggle-row">
+          <span class="ctrl-toggle-label" id="spotLabel">Spot Instance</span>
+          <button class="toggle-track on" id="spotToggle" onclick="toggleSpot()" role="switch" aria-checked="true">
+            <span class="toggle-thumb"></span>
+          </button>
+        </div>
+
+        <div class="ctrl-row">
+          <div class="ctrl-row-header">
+            <span class="ctrl-label">Price / hr</span>
+            <span class="ctrl-value" id="dv-spotHr">$0.1661/hr</span>
+          </div>
+          <input type="range" id="sl-spotHr" min="0.05" max="0.5" step="0.001" value="0.1661">
+        </div>
+
+        <div id="multiplierRow" style="display:none">
+          <div class="ctrl-row">
+            <div class="ctrl-row-header">
+              <span class="ctrl-label">On-Demand Multiplier</span>
+              <span class="ctrl-value" id="dv-multiplier">2.0x</span>
+            </div>
+            <input type="range" id="sl-multiplier" min="1.5" max="4" step="0.1" value="2">
+          </div>
+        </div>
+
+        <div class="ctrl-row">
+          <div class="ctrl-row-header">
+            <span class="ctrl-label">Instances / Machine</span>
+            <span class="ctrl-value" id="dv-instances">8</span>
+          </div>
+          <input type="range" id="sl-instances" min="1" max="32" step="1" value="8">
+        </div>
+      </div>
+
+      <!-- Model Plan -->
+      <div class="ctrl-section">
+        <div class="ctrl-section-head">Model Plan</div>
+
+        <div class="ctrl-row" style="padding-bottom:4px">
+          <div class="ctrl-label" style="margin-bottom:8px">Billing Mode</div>
+          <div class="ctrl-radio-group">
+            <button class="ctrl-radio active" id="r-perCredit" onclick="setBillingMode(false)">Per Credit</button>
+            <button class="ctrl-radio" id="r-perRequest" onclick="setBillingMode(true)">Per Request</button>
+          </div>
+        </div>
+
+        <div class="ctrl-row">
+          <div class="ctrl-row-header">
+            <span class="ctrl-label">Plan Cost / mo</span>
+            <span class="ctrl-value" id="dv-modelPlanCost">$20</span>
+          </div>
+          <input type="range" id="sl-modelPlanCost" min="10" max="500" step="10" value="20">
+        </div>
+
+        <div id="creditControls">
+          <div class="ctrl-row">
+            <div class="ctrl-row-header">
+              <span class="ctrl-label">Credits / Plan / mo</span>
+              <span class="ctrl-value" id="dv-modelCredits">20B</span>
+            </div>
+            <input type="range" id="sl-modelCredits" min="1" max="100" step="1" value="20">
+          </div>
+        </div>
+
+        <div id="requestControls" style="display:none">
+          <div class="ctrl-row">
+            <div class="ctrl-row-header">
+              <span class="ctrl-label">Requests / Plan / mo</span>
+              <span class="ctrl-value" id="dv-reqPerPlan">300</span>
+            </div>
+            <input type="range" id="sl-reqPerPlan" min="100" max="1000" step="100" value="300">
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /controls-card -->
+
+  </div><!-- /main-grid -->
+</div><!-- /page -->
+
+<script>
+// ── State (matches original app defaults) ─────────────────────────────
+var S = {
+  users: 50,
+  reqPerUser: 10,
+  sessionsPerUser: 4,
+  sessionHrs: 1,
+  creditsPerReq: 0.5,
+  isSpot: true,
+  spotHr: 0.1661,
+  multiplier: 2,
+  instances: 8,
+  modelPlanCost: 20,
+  modelCredits: 20,
+  isPerRequest: false,
+  reqPerPlan: 300
+};
+
+// ── Theme ──────────────────────────────────────────────────────────────
+(function initTheme() {
+  var t = localStorage.getItem('vcs-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeIcon').textContent = t === 'dark' ? '☾' : '☀';
+  document.getElementById('themeLabel').textContent = t === 'dark' ? 'Dark' : 'Light';
+})();
+
+document.getElementById('themeBtn').addEventListener('click', function() {
+  var cur = document.documentElement.getAttribute('data-theme');
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  document.getElementById('themeIcon').textContent = next === 'dark' ? '☾' : '☀';
+  document.getElementById('themeLabel').textContent = next === 'dark' ? 'Dark' : 'Light';
+  localStorage.setItem('vcs-theme', next);
+});
+
+// ── Helpers ────────────────────────────────────────────────────────────
+function fmtUSD(v) {
+  return '$' + v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtInt(v) {
+  return Math.round(v).toLocaleString('en-US');
+}
+function fmtCredits(v) {
+  // v is in millions. ≥1M → "Xm", <1M → "Xk"
+  if (v >= 1) return v.toFixed(1) + 'M';
+  return (v * 1000).toFixed(0) + 'k';
+}
+
+// ── Calculations (exact match to original app logic) ──────────────────
+function calc() {
+  var hrRate = S.isSpot ? S.spotHr : S.spotHr * S.multiplier;
+  var totalSessionsMo = S.users * S.sessionsPerUser * 20;
+  var dailySessions   = totalSessionsMo / 20;
+  var totalRequests   = totalSessionsMo * S.reqPerUser;
+  var totalCredits    = totalSessionsMo * S.reqPerUser * S.creditsPerReq * 1000000; // raw credits
+  var creditsB        = totalCredits / 1e9; // billions
+
+  var plansNeeded, modelCostMo;
+  if (S.isPerRequest) {
+    plansNeeded = Math.ceil(totalRequests / S.reqPerPlan);
+  } else {
+    plansNeeded = Math.ceil(creditsB / S.modelCredits);
+  }
+  modelCostMo = plansNeeded * S.modelPlanCost;
+
+  var workingMachines    = Math.round(dailySessions / 10 * 1.3 / S.instances) || 1;
+  var nonWorkingMachines = 1;
+  var workingHours       = workingMachines * 10 * 20;
+  var nonWorkingHours    = nonWorkingMachines * 14 * 30;
+  var hostingCostMo      = (workingHours + nonWorkingHours) * hrRate;
+
+  var totalMo = modelCostMo + hostingCostMo;
+  var totalYr = totalMo * 12;
+
+  return {
+    hrRate: hrRate,
+    totalSessionsMo: totalSessionsMo,
+    dailySessions: dailySessions,
+    totalRequests: totalRequests,
+    totalCredits: totalCredits,
+    creditsB: creditsB,
+    plansNeeded: plansNeeded,
+    modelCostMo: modelCostMo,
+    workingMachines: workingMachines,
+    nonWorkingMachines: nonWorkingMachines,
+    hostingCostMo: hostingCostMo,
+    totalMo: totalMo,
+    totalYr: totalYr
+  };
+}
+
+// ── Pie chart ──────────────────────────────────────────────────────────
+function drawPie(modelAmt, hostAmt) {
+  var svg = document.getElementById('pieSvg');
+  var total = modelAmt + hostAmt;
+  if (total === 0) { svg.innerHTML = ''; return; }
+
+  // Get current theme colors
+  var style = getComputedStyle(document.documentElement);
+  var cModel   = style.getPropertyValue('--green-dark').trim();
+  var cHosting = style.getPropertyValue('--teal').trim();
+  var cBg      = style.getPropertyValue('--white').trim();
+
+  // Update legend dots to match theme
+  document.getElementById('dotModel').style.background   = cModel;
+  document.getElementById('dotHosting').style.background = cHosting;
+
+  var R = 60, cx = 70, cy = 70;
+  var mFrac = modelAmt / total;
+  var hFrac = 1 - mFrac;
+
+  function pathArc(frac, startAngle) {
+    if (frac >= 1) frac = 0.9999;
+    var angle    = frac * 2 * Math.PI;
+    var endAngle = startAngle + angle;
+    var x1 = cx + R * Math.sin(startAngle);
+    var y1 = cy - R * Math.cos(startAngle);
+    var x2 = cx + R * Math.sin(endAngle);
+    var y2 = cy - R * Math.cos(endAngle);
+    var large = angle > Math.PI ? 1 : 0;
+    return 'M' + cx + ',' + cy +
+           ' L' + x1.toFixed(3) + ',' + y1.toFixed(3) +
+           ' A' + R + ',' + R + ' 0 ' + large + ',1 ' + x2.toFixed(3) + ',' + y2.toFixed(3) +
+           ' Z';
+  }
+
+  svg.innerHTML =
+    '<path d="' + pathArc(mFrac, 0) + '" fill="' + cModel + '"/>' +
+    '<path d="' + pathArc(hFrac, mFrac * 2 * Math.PI) + '" fill="' + cHosting + '"/>' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="28" fill="' + cBg + '"/>';
+}
+
+// ── Render ─────────────────────────────────────────────────────────────
+function render() {
+  var r = calc();
+
+  document.getElementById('totalMo').textContent  = fmtUSD(r.totalMo);
+  document.getElementById('totalYr').textContent  = fmtUSD(r.totalYr);
+
+  drawPie(r.modelCostMo, r.hostingCostMo);
+  document.getElementById('legModel').textContent   = fmtUSD(r.modelCostMo);
+  document.getElementById('legHosting').textContent = fmtUSD(r.hostingCostMo);
+
+  var rows = [
+    ['Users',                     fmtInt(S.users)],
+    ['Total Sessions / day',      fmtInt(r.dailySessions)],
+    ['Total Sessions / mo',       fmtInt(r.totalSessionsMo)],
+    ['Total Requests / mo',       fmtInt(r.totalRequests)],
+    ['Total Credits / mo',        fmtInt(r.totalCredits)],
+    ['Credits (Billions)',         r.creditsB.toFixed(3) + ' B'],
+    ['Plans Needed',              fmtInt(r.plansNeeded)],
+    ['Working Machines (10h)',    fmtInt(r.workingMachines)],
+    ['Non-Working Machines (14h)', fmtInt(r.nonWorkingMachines)],
+    ['Hourly Rate / machine',     '$' + r.hrRate.toFixed(4)],
+    ['Model Cost / mo',           fmtUSD(r.modelCostMo)],
+    ['Hosting Cost / mo',         fmtUSD(r.hostingCostMo)],
+    ['TOTAL / mo',                fmtUSD(r.totalMo)]
+  ];
+
+  var html = '';
+  for (var i = 0; i < rows.length; i++) {
+    var bold = i === rows.length - 1 ? ' style="font-weight:700"' : '';
+    html += '<tr' + bold + '><td>' + rows[i][0] + '</td><td style="text-align:right">' + rows[i][1] + '</td></tr>';
+  }
+  document.getElementById('breakdownBody').innerHTML = html;
+}
+
+// ── Slider wiring ──────────────────────────────────────────────────────
+var sliderCfg = [
+  {
+    id: 'sl-users', key: 'users',
+    fmt: function(v) { return fmtInt(v); }
+  },
+  {
+    id: 'sl-reqPerUser', key: 'reqPerUser',
+    fmt: function(v) { return fmtInt(v); }
+  },
+  {
+    id: 'sl-sessionsPerUser', key: 'sessionsPerUser',
+    fmt: function(v) { return fmtInt(v); }
+  },
+  {
+    id: 'sl-sessionHrs', key: 'sessionHrs',
+    fmt: function(v) { return fmtInt(v) + ' hr'; }
+  },
+  {
+    id: 'sl-creditsPerReq', key: 'creditsPerReq',
+    fmt: function(v) { return fmtCredits(v); }
+  },
+  {
+    id: 'sl-spotHr', key: 'spotHr',
+    fmt: function(v) { return '$' + parseFloat(v).toFixed(4) + '/hr'; }
+  },
+  {
+    id: 'sl-multiplier', key: 'multiplier',
+    fmt: function(v) { return parseFloat(v).toFixed(1) + 'x'; }
+  },
+  {
+    id: 'sl-instances', key: 'instances',
+    fmt: function(v) { return fmtInt(v); }
+  },
+  {
+    id: 'sl-modelPlanCost', key: 'modelPlanCost',
+    fmt: function(v) { return '$' + fmtInt(v); }
+  },
+  {
+    id: 'sl-modelCredits', key: 'modelCredits',
+    fmt: function(v) { return fmtInt(v) + 'B'; }
+  },
+  {
+    id: 'sl-reqPerPlan', key: 'reqPerPlan',
+    fmt: function(v) { return fmtInt(v); }
+  }
+];
+
+for (var ci = 0; ci < sliderCfg.length; ci++) {
+  (function(cfg) {
+    var el = document.getElementById(cfg.id);
+    if (!el) return;
+    var dispId = cfg.id.replace('sl-', 'dv-');
+    el.addEventListener('input', function() {
+      S[cfg.key] = parseFloat(this.value);
+      var disp = document.getElementById(dispId);
+      if (disp) disp.textContent = cfg.fmt(S[cfg.key]);
+      render();
+    });
+  })(sliderCfg[ci]);
+}
+
+// ── Billing mode ───────────────────────────────────────────────────────
+function setBillingMode(isPerReq) {
+  S.isPerRequest = isPerReq;
+  document.getElementById('r-perCredit').classList.toggle('active', !isPerReq);
+  document.getElementById('r-perRequest').classList.toggle('active', isPerReq);
+  document.getElementById('creditControls').style.display  = isPerReq ? 'none'  : 'block';
+  document.getElementById('requestControls').style.display = isPerReq ? 'block' : 'none';
+  render();
+}
+
+// ── Spot toggle ────────────────────────────────────────────────────────
+function toggleSpot() {
+  S.isSpot = !S.isSpot;
+  var btn = document.getElementById('spotToggle');
+  if (S.isSpot) {
+    btn.classList.add('on');
+  } else {
+    btn.classList.remove('on');
+  }
+  btn.setAttribute('aria-checked', String(S.isSpot));
+  document.getElementById('spotLabel').textContent = S.isSpot ? 'Spot Instance' : 'On-Demand';
+  document.getElementById('multiplierRow').style.display = S.isSpot ? 'none' : 'block';
+  render();
+}
+
+// ── Init ───────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
