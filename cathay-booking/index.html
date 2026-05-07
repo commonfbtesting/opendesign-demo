@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cathay Pacific</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f4f4f0;
+    --white: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #666666;
+    --border: #e0e0dc;
+    --green-dark: #1e3a2f;
+    --green-mid: #2d5a45;
+    --teal: #006564;
+    --teal-light: #e8f4f4;
+    --font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  html { font-family: var(--font); background: var(--bg); color: var(--fg); }
+  body { min-height: 100vh; }
+
+  /* ─── UTILITY BAR ─── */
+  .utility-bar {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    padding: 0 24px;
+  }
+  .utility-bar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 36px;
+  }
+  .utility-bar a {
+    color: var(--teal);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .utility-bar a:hover { text-decoration: underline; }
+  .utility-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .utility-right a {
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .utility-right a svg { flex-shrink: 0; }
+
+  /* ─── MAIN NAV ─── */
+  .main-nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .main-nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    gap: 32px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  /* Cathay wingmark SVG */
+  .logo-mark {
+    width: 32px;
+    height: 22px;
+  }
+  .logo-wordmark {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--fg);
+    letter-spacing: -0.3px;
+  }
+  .logo-anniversary {
+    font-size: 11px;
+    color: var(--teal);
+    font-weight: 600;
+    border: 1px solid var(--teal);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--fg);
+    font-size: 14px;
+    padding: 0 12px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover { border-bottom-color: var(--teal); color: var(--teal); }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+  .btn-signin {
+    border: 1.5px solid var(--fg);
+    background: transparent;
+    color: var(--fg);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-signin:hover { background: var(--fg); color: var(--white); }
+  .avatar-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6b4fbb, #9b6ec8);
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--bg);
+    display: grid;
+    grid-template-columns: 38% 62%;
+    min-height: 360px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .hero-text {
+    padding: 48px 48px 40px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--bg);
+    position: relative;
+    z-index: 1;
+  }
+  .hero-eyebrow {
+    font-size: 13px;
+    color: var(--teal);
+    font-weight: 500;
+    margin-bottom: 14px;
+    letter-spacing: 0.01em;
+  }
+  .hero-headline {
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.15;
+    margin-bottom: 18px;
+    letter-spacing: -0.5px;
+  }
+  .hero-body {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 320px;
+    margin-bottom: 32px;
+  }
+  .btn-learn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-dark);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 22px;
+    align-self: flex-start;
+    transition: background 0.15s;
+  }
+  .btn-learn:hover { background: var(--green-mid); }
+  .btn-learn svg { flex-shrink: 0; }
+
+  .hero-image {
+    position: relative;
+    overflow: hidden;
+    background: #c8dde8;
+  }
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    transition: opacity 0.6s ease;
+  }
+
+  /* Slider controls */
+  .slider-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: flex-end;
+    padding: 12px 24px 12px 0;
+    background: var(--bg);
+  }
+  .slider-dots {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .slider-dot {
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    padding: 2px 0;
+    border-bottom: 1.5px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .slider-dot.active {
+    color: var(--fg);
+    font-weight: 700;
+    border-bottom-color: var(--fg);
+  }
+  .slider-pause {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+  }
+  .slider-pause:hover { color: var(--fg); }
+
+  /* ─── BOOKING PANEL ─── */
+  .booking-section {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+  }
+  .booking-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Top-level tabs: Book a trip / Manage booking / Check in / Check flight status */
+  .booking-tabs-top {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--border);
+  }
+  .btab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    border-right: 1px solid var(--border);
+    text-align: left;
+  }
+  .btab:last-child { border-right: none; }
+  .btab.active {
+    background: var(--green-dark);
+    color: var(--white);
+    border-bottom-color: var(--green-dark);
+  }
+  .btab:not(.active):hover { background: #f9f9f7; color: var(--fg); }
+  .btab-icon { flex-shrink: 0; opacity: 0.7; }
+  .btab.active .btab-icon { opacity: 1; }
+  .btab-minus {
+    margin-left: auto;
+    font-size: 18px;
+    font-weight: 300;
+    opacity: 0.6;
+  }
+
+  /* Tab content panels */
+  .booking-tab-content { display: none; }
+  .booking-tab-content.active { display: block; }
+
+  /* Placeholder panels */
+  .placeholder-panel {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* Sub-tabs: Book flights / Multi-city / Packages / Stays */
+  .booking-subtabs {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 0;
+  }
+  .stab {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    padding: 14px 16px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .stab.active { color: var(--fg); border-bottom-color: var(--fg); }
+  .stab:hover { color: var(--fg); }
+
+  .redeem-toggle {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  /* iOS-style toggle */
+  .toggle-track {
+    width: 40px;
+    height: 22px;
+    background: #ccc;
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle-track.on { background: var(--teal); }
+  .toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle-track.on .toggle-thumb { transform: translateX(18px); }
+
+  /* Sub-tab content */
+  .stab-content { display: none; }
+  .stab-content.active { display: block; }
+
+  /* Form grid */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-row:last-of-type { border-bottom: none; }
+  .form-field {
+    padding: 14px 20px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .form-field:hover { background: #fafaf8; }
+  .form-field + .form-field {
+    border-left: 1px solid var(--border);
+  }
+  .form-field-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: none;
+    margin-bottom: 4px;
+    letter-spacing: 0.01em;
+  }
+  .form-field-value {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--fg);
+    line-height: 1.2;
+  }
+  .form-field-value.placeholder { color: var(--muted); font-weight: 300; }
+  .form-field-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+  }
+  .form-swap {
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--muted);
+    transition: background 0.15s;
+  }
+  .form-swap:hover { background: var(--border); }
+
+  /* from field wrapper to allow swap button positioning */
+  .form-field-from { position: relative; }
+
+  /* Latest offers bar */
+  .offers-bar {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .offers-label {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .offer-pill {
+    font-size: 12px;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    padding: 4px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    background: none;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .offer-pill:hover { background: var(--teal-light); }
+
+  /* Promo + Search row */
+  .form-action-row {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    gap: 16px;
+  }
+  .promo-link {
+    font-size: 13px;
+    color: var(--teal);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .promo-link:hover { text-decoration: underline; }
+  .btn-search {
+    background: var(--green-dark);
+    color: var(--white);
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 14px 36px;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+  .btn-search:hover { background: var(--green-mid); }
+
+  /* Multi-city form */
+  .multicity-form { padding: 20px; }
+  .multicity-leg {
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+    background: var(--white);
+  }
+  .multicity-leg .form-row { border-bottom: 1px solid var(--border); }
+  .multicity-leg .form-row:last-child { border-bottom: none; }
+  .add-leg {
+    font-size: 13px;
+    color: var(--teal);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .add-leg:hover { text-decoration: underline; }
+
+  /* Packages / Stays */
+  .packages-form, .stays-form {
+    padding: 24px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .stays-form { grid-template-columns: 1fr 1fr 1fr; }
+  .pkg-field {
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .pkg-field:hover { background: #fafaf8; }
+  .pkg-field .form-field-label { margin-bottom: 6px; }
+
+  /* Manage booking, Check in, flight status placeholders */
+  .manage-form, .checkin-form, .status-form {
+    padding: 32px 20px;
+  }
+  .manage-form .mf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .mf-input-wrap {
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+  }
+  .mf-input-wrap .form-field-label { margin-bottom: 6px; display: block; font-size: 11px; color: var(--muted); font-weight: 500; }
+  .mf-input-wrap input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: var(--fg);
+    font-family: var(--font);
+    background: transparent;
+  }
+  .mf-input-wrap input::placeholder { color: var(--muted); font-weight: 300; }
+  .mf-actions { display: flex; gap: 12px; align-items: center; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-image { height: 240px; }
+    .hero-text { padding: 32px 24px; }
+    .booking-tabs-top { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-field + .form-field { border-left: none; border-top: 1px solid var(--border); }
+    .packages-form { grid-template-columns: 1fr; }
+    .stays-form { grid-template-columns: 1fr 1fr; }
+    .manage-form .mf-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .utility-bar-inner { flex-direction: column; align-items: flex-start; height: auto; padding: 8px 0; gap: 4px; }
+    .nav-links { display: none; }
+    .booking-tabs-top { grid-template-columns: 1fr 1fr; }
+    .btab { font-size: 12px; padding: 12px 10px; }
+    .slider-controls { padding: 8px 12px 8px 0; }
+    .hero-eyebrow { font-size: 12px; }
+    .hero-body { font-size: 13px; }
+    .stays-form { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── UTILITY BAR ─── -->
+<div class="utility-bar">
+  <div class="utility-bar-inner">
+    <a href="#">Cathay for Business</a>
+    <div class="utility-right">
+      <a href="#">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Search
+      </a>
+      <a href="#">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Help and support
+      </a>
+      <a href="#">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><circle cx="18" cy="5" r="3" fill="var(--teal)" stroke="none"/></svg>
+        Notification centre
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MAIN NAV ─── -->
+<nav class="main-nav">
+  <div class="main-nav-inner">
+    <a href="#" class="logo">
+      <!-- Cathay wingmark simplified SVG -->
+      <svg class="logo-mark" viewBox="0 0 42 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 22 C8 18, 18 10, 28 8 C36 6, 40 10, 40 14 C40 18, 36 22, 28 22 C20 22, 12 20, 2 22Z" fill="#1a1a1a"/>
+        <path d="M6 24 C14 20, 24 16, 34 16 C38 16, 40 18, 38 20 C35 22, 28 24, 6 24Z" fill="#444"/>
+      </svg>
+      <span class="logo-wordmark">CATHAY</span>
+      <span class="logo-anniversary">80</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#">Flights</a>
+      <a href="#">Holidays</a>
+      <a href="#">Shopping</a>
+      <a href="#">Insurance</a>
+      <a href="#">Dining</a>
+      <a href="#">Payment</a>
+      <a href="#">Membership</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="#" class="btn-signin">Sign in / up</a>
+      <button class="avatar-btn" aria-label="Account"></button>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO SLIDER ─── -->
+<section class="hero" id="hero">
+  <div class="hero-text" id="hero-text">
+    <div class="hero-eyebrow" id="hero-eyebrow">Eight decades of shared moments</div>
+    <h1 class="hero-headline" id="hero-headline">The Journey Home</h1>
+    <p class="hero-body" id="hero-body">For 80 years, you've been a part of our story – and we've been a part of yours. Witness a story of love, distance and homecoming, where two generations led on different paths are brought closer together.</p>
+    <a href="#" class="btn-learn" id="hero-cta">
+      Learn more
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="1"/><path d="M8 21h8M12 17v4"/></svg>
+    </a>
+  </div>
+  <div class="hero-image">
+    <img id="hero-img" src="mouw7umy-banner1.png" alt="Banner 1">
+  </div>
+</section>
+
+<!-- Slider controls -->
+<div class="slider-controls">
+  <div class="slider-dots" role="tablist" aria-label="Hero slides">
+    <button class="slider-dot active" data-slide="0" role="tab" aria-selected="true">01</button>
+    <button class="slider-dot" data-slide="1" role="tab">02</button>
+    <button class="slider-dot" data-slide="2" role="tab">03</button>
+    <button class="slider-dot" data-slide="3" role="tab">04</button>
+  </div>
+  <button class="slider-pause" id="slider-pause" aria-label="Pause slideshow">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+  </button>
+</div>
+
+<!-- ─── BOOKING SECTION ─── -->
+<section class="booking-section">
+  <div class="booking-inner">
+
+    <!-- Top-level tabs -->
+    <div class="booking-tabs-top" role="tablist">
+      <button class="btab active" data-btab="book" role="tab" aria-selected="true">
+        <svg class="btab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.93 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.87 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Book a trip
+        <span class="btab-minus">−</span>
+      </button>
+      <button class="btab" data-btab="manage" role="tab">
+        <svg class="btab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Manage booking
+      </button>
+      <button class="btab" data-btab="checkin" role="tab">
+        <svg class="btab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Check in
+      </button>
+      <button class="btab" data-btab="status" role="tab">
+        <svg class="btab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Check flight status
+      </button>
+    </div>
+
+    <!-- BOOK A TRIP PANEL -->
+    <div class="booking-tab-content active" id="panel-book">
+      <!-- Sub-tabs -->
+      <div class="booking-subtabs">
+        <button class="stab active" data-stab="flights">Book flights</button>
+        <button class="stab" data-stab="multicity">Multi-city</button>
+        <button class="stab" data-stab="packages">Packages</button>
+        <button class="stab" data-stab="stays">Stays</button>
+        <div class="redeem-toggle">
+          <div class="toggle-track" id="redeem-toggle" role="switch" aria-checked="false" tabindex="0">
+            <div class="toggle-thumb"></div>
+          </div>
+          Redeem with miles
+        </div>
+      </div>
+
+      <!-- Book Flights -->
+      <div class="stab-content active" id="stab-flights">
+        <div class="form-row">
+          <div class="form-field form-field-from">
+            <div class="form-field-label">Leaving from</div>
+            <div class="form-field-value">Hong Kong, (HKG)</div>
+            <div class="form-field-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            <div class="form-swap" title="Swap origin and destination">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4 4 4"/><path d="M17 8v12m0 0 4-4m-4 4-4-4"/></svg>
+            </div>
+          </div>
+          <div class="form-field">
+            <div class="form-field-label">Going to</div>
+            <div class="form-field-value placeholder">Select a destination</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <div class="form-field-label">Trip type</div>
+            <div class="form-field-value">Return</div>
+            <div class="form-field-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="form-field">
+            <div class="form-field-label">Cabin class and passengers</div>
+            <div class="form-field-value">Economy, 1 Adult</div>
+            <div class="form-field-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <div class="form-field-label">Departing on</div>
+            <div class="form-field-value placeholder">Select a departure date</div>
+            <div class="form-field-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+          </div>
+          <div class="form-field">
+            <div class="form-field-label">Returning on</div>
+            <div class="form-field-value placeholder">Select a returning date</div>
+            <div class="form-field-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="offers-bar">
+          <span class="offers-label">Latest offers:</span>
+          <button class="offer-pill">Student Fare up to 10% of…</button>
+          <button class="offer-pill">Book Domestic Helper Fare…</button>
+        </div>
+        <div class="form-action-row">
+          <a href="#" class="promo-link">Add a promotion code →</a>
+          <button class="btn-search">Search flights</button>
+        </div>
+      </div>
+
+      <!-- Multi-city -->
+      <div class="stab-content" id="stab-multicity">
+        <div class="multicity-form">
+          <div class="multicity-leg">
+            <div class="form-row">
+              <div class="form-field">
+                <div class="form-field-label">Flight 1 — Leaving from</div>
+                <div class="form-field-value">Hong Kong, (HKG)</div>
+              </div>
+              <div class="form-field">
+                <div class="form-field-label">Going to</div>
+                <div class="form-field-value placeholder">Select a destination</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <div class="form-field-label">Departing on</div>
+                <div class="form-field-value placeholder">Select a date</div>
+                <div class="form-field-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+              </div>
+              <div class="form-field">
+                <div class="form-field-label">Cabin class and passengers</div>
+                <div class="form-field-value">Economy, 1 Adult</div>
+                <div class="form-field-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+            </div>
+          </div>
+          <div class="multicity-leg">
+            <div class="form-row">
+              <div class="form-field">
+                <div class="form-field-label">Flight 2 — Leaving from</div>
+                <div class="form-field-value placeholder">Select origin</div>
+              </div>
+              <div class="form-field">
+                <div class="form-field-label">Going to</div>
+                <div class="form-field-value placeholder">Select a destination</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <div class="form-field-label">Departing on</div>
+                <div class="form-field-value placeholder">Select a date</div>
+                <div class="form-field-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+              </div>
+              <div class="form-field"></div>
+            </div>
+          </div>
+          <button class="add-leg">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add another flight
+          </button>
+          <div class="form-action-row" style="padding: 20px 0 0; border-top: none;">
+            <a href="#" class="promo-link">Add a promotion code →</a>
+            <button class="btn-search">Search flights</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Packages -->
+      <div class="stab-content" id="stab-packages">
+        <div class="packages-form">
+          <div class="pkg-field">
+            <div class="form-field-label">Leaving from</div>
+            <div class="form-field-value">Hong Kong, (HKG)</div>
+          </div>
+          <div class="pkg-field">
+            <div class="form-field-label">Going to</div>
+            <div class="form-field-value placeholder">Select a destination</div>
+          </div>
+          <div class="pkg-field">
+            <div class="form-field-label">Check-in date</div>
+            <div class="form-field-value placeholder">Select date</div>
+          </div>
+          <div class="pkg-field">
+            <div class="form-field-label">Check-out date</div>
+            <div class="form-field-value placeholder">Select date</div>
+          </div>
+          <div class="pkg-field">
+            <div class="form-field-label">Travellers</div>
+            <div class="form-field-value">2 Adults</div>
+          </div>
+          <div class="pkg-field">
+            <div class="form-field-label">Cabin class</div>
+            <div class="form-field-value">Economy</div>
+          </div>
+        </div>
+        <div class="form-action-row">
+          <span></span>
+          <button class="btn-search">Search packages</button>
+        </div>
+      </div>
+
+      <!-- Stays -->
+      <div class="stab-content" id="stab-stays">
+        <div class="stays-form">
+          <div class="pkg-field">
+            <div class="form-field-label">Destination</div>
+            <div class="form-field-value placeholder">Where are you going?</div>
+          </div>
+          <div class="pkg-field">
+            <div class="form-field-label">Check-in</div>
+            <div class="form-field-value placeholder">Select date</div>
+          </div>
+          <div class="pkg-field">
+            <div class="form-field-label">Check-out</div>
+            <div class="form-field-value placeholder">Select date</div>
+          </div>
+          <div class="pkg-field" style="grid-column: span 1;">
+            <div class="form-field-label">Guests</div>
+            <div class="form-field-value">2 Adults</div>
+          </div>
+        </div>
+        <div class="form-action-row">
+          <span></span>
+          <button class="btn-search">Search stays</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANAGE BOOKING PANEL -->
+    <div class="booking-tab-content" id="panel-manage">
+      <div class="manage-form">
+        <div class="mf-grid">
+          <div class="mf-input-wrap">
+            <label class="form-field-label">Booking reference</label>
+            <input type="text" placeholder="e.g. ABC123">
+          </div>
+          <div class="mf-input-wrap">
+            <label class="form-field-label">Last name</label>
+            <input type="text" placeholder="As shown on passport">
+          </div>
+          <div class="mf-input-wrap">
+            <label class="form-field-label">First name</label>
+            <input type="text" placeholder="As shown on passport">
+          </div>
+        </div>
+        <div class="mf-actions">
+          <button class="btn-search">Retrieve booking</button>
+          <a href="#" class="promo-link">Manage with login →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECK IN PANEL -->
+    <div class="booking-tab-content" id="panel-checkin">
+      <div class="checkin-form">
+        <div class="mf-grid">
+          <div class="mf-input-wrap">
+            <label class="form-field-label">Booking reference</label>
+            <input type="text" placeholder="e.g. ABC123">
+          </div>
+          <div class="mf-input-wrap">
+            <label class="form-field-label">Last name</label>
+            <input type="text" placeholder="As shown on passport">
+          </div>
+        </div>
+        <div class="mf-actions">
+          <button class="btn-search">Check in</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECK FLIGHT STATUS PANEL -->
+    <div class="booking-tab-content" id="panel-status">
+      <div class="status-form">
+        <div class="mf-grid">
+          <div class="mf-input-wrap">
+            <label class="form-field-label">Flight number</label>
+            <input type="text" placeholder="e.g. CX 100">
+          </div>
+          <div class="mf-input-wrap">
+            <label class="form-field-label">Date</label>
+            <input type="date">
+          </div>
+        </div>
+        <div class="mf-actions">
+          <button class="btn-search">Check status</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+// ─── SLIDER ───
+const slides = [
+  {
+    eyebrow: "Eight decades of shared moments",
+    headline: "The Journey Home",
+    body: "For 80 years, you've been a part of our story – and we've been a part of yours. Witness a story of love, distance and homecoming, where two generations led on different paths are brought closer together.",
+    cta: "Learn more",
+    img: "mouw7umy-banner1.png",
+    imgAlt: "Banner 1"
+  },
+  {
+    eyebrow: "Explore the world with Cathay",
+    headline: "Fly Further, Dream Bigger",
+    body: "From Hong Kong to over 100 destinations, discover seamless connections and award-winning service that have defined travel for generations.",
+    cta: "Explore destinations",
+    img: "mouw4rl9-banner2.png",
+    imgAlt: "Banner 2"
+  },
+  {
+    eyebrow: "Marco Polo Club",
+    headline: "Rewards That Take You Higher",
+    body: "Earn Asia Miles on every flight, hotel stay, and purchase. Redeem for flights, upgrades, and exclusive experiences around the globe.",
+    cta: "Join now",
+    img: "mouw41fh-banner3.png",
+    imgAlt: "Banner 3"
+  },
+  {
+    eyebrow: "Cathay Business Class",
+    headline: "Your Sky, Your Space",
+    body: "Lie-flat beds, direct aisle access in every seat, and a curated menu created with Michelin-starred chefs. Business class redefined.",
+    cta: "Discover Business",
+    img: "mouw41fo-banner4.png",
+    imgAlt: "Banner 4"
+  }
+];
+
+let currentSlide = 0;
+let paused = false;
+let interval;
+
+const heroImg = document.getElementById('hero-img');
+const heroEyebrow = document.getElementById('hero-eyebrow');
+const heroHeadline = document.getElementById('hero-headline');
+const heroBody = document.getElementById('hero-body');
+const heroCta = document.getElementById('hero-cta');
+const dots = document.querySelectorAll('.slider-dot');
+const pauseBtn = document.getElementById('slider-pause');
+
+function goToSlide(n) {
+  currentSlide = n;
+  const s = slides[n];
+  heroImg.style.opacity = '0';
+  setTimeout(() => {
+    heroImg.src = s.img;
+    heroImg.alt = s.imgAlt;
+    heroImg.style.opacity = '1';
+  }, 200);
+  heroEyebrow.textContent = s.eyebrow;
+  heroHeadline.textContent = s.headline;
+  heroBody.textContent = s.body;
+  heroCta.childNodes[0].textContent = s.cta + ' ';
+  dots.forEach((d, i) => {
+    d.classList.toggle('active', i === n);
+    d.setAttribute('aria-selected', i === n ? 'true' : 'false');
+  });
+}
+
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => { goToSlide(i); resetInterval(); });
+});
+
+function resetInterval() {
+  clearInterval(interval);
+  if (!paused) interval = setInterval(() => { goToSlide((currentSlide + 1) % slides.length); }, 5000);
+}
+
+pauseBtn.addEventListener('click', () => {
+  paused = !paused;
+  if (paused) {
+    clearInterval(interval);
+    pauseBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    pauseBtn.setAttribute('aria-label', 'Play slideshow');
+  } else {
+    pauseBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    pauseBtn.setAttribute('aria-label', 'Pause slideshow');
+    resetInterval();
+  }
+});
+
+interval = setInterval(() => { goToSlide((currentSlide + 1) % slides.length); }, 5000);
+
+// ─── TOP TABS ───
+document.querySelectorAll('.btab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.btab').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+    document.querySelectorAll('.booking-tab-content').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    document.getElementById('panel-' + btn.dataset.btab).classList.add('active');
+  });
+});
+
+// ─── SUB-TABS ───
+document.querySelectorAll('.stab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.stab-content').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('stab-' + btn.dataset.stab).classList.add('active');
+  });
+});
+
+// ─── REDEEM TOGGLE ───
+const redeemToggle = document.getElementById('redeem-toggle');
+redeemToggle.addEventListener('click', () => {
+  const on = redeemToggle.classList.toggle('on');
+  redeemToggle.setAttribute('aria-checked', on ? 'true' : 'false');
+});
+redeemToggle.addEventListener('keydown', e => {
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); redeemToggle.click(); }
+});
+</script>
+
+</body>
+</html>

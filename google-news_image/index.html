@@ -1,0 +1,937 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cathay News</title>
+<style>
+  /* ── Tokens ─────────────────────────────────────────────── */
+  :root {
+    --bg:         #f4f4f0;
+    --white:      #ffffff;
+    --fg:         #1a1a1a;
+    --muted:      #666666;
+    --border:     #e0e0dc;
+    --green-dark: #1e3a2f;
+    --green-mid:  #2d5a45;
+    --teal:       #006564;
+    --teal-light: #e8f4f4;
+    --image-bg:   #c8dde8;
+    --font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  /* ── Reset ───────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; }
+
+  /* ── Utility bar ─────────────────────────────────────────── */
+  .utility-bar {
+    height: 36px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .utility-bar__left a {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--teal);
+    transition: opacity 0.15s;
+  }
+  .utility-bar__left a:hover { opacity: 0.75; }
+  .utility-bar__right {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .utility-bar__right a { color: var(--muted); transition: color 0.15s; }
+  .utility-bar__right a:hover { color: var(--teal); }
+
+  /* ── Main nav ────────────────────────────────────────────── */
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .nav__logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    flex-shrink: 0;
+  }
+  .nav__logo-mark {
+    width: 28px;
+    height: 28px;
+    background: var(--green-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav__logo-mark svg { fill: var(--white); }
+
+  .nav__search {
+    flex: 1;
+    max-width: 560px;
+    position: relative;
+  }
+  .nav__search input {
+    width: 100%;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0 16px 0 40px;
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--fg);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .nav__search input:focus { border-color: var(--teal); background: var(--white); }
+  .nav__search input::placeholder { color: var(--muted); }
+  .nav__search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+  }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-inline-start: auto;
+    flex-shrink: 0;
+  }
+  .nav__links a {
+    font-size: 14px;
+    color: var(--muted);
+    padding: 8px 10px;
+    transition: color 0.15s;
+  }
+  .nav__links a:hover { color: var(--teal); }
+
+  .nav__signin {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 20px;
+    padding: 6px 16px;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+  .nav__signin:hover { background: var(--teal-light); }
+
+  /* ── Category tabs ───────────────────────────────────────── */
+  .tabs-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .tabs {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
+    padding: 14px 16px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .tab:hover { color: var(--fg); }
+  .tab.active {
+    color: var(--teal);
+    border-bottom-color: var(--teal);
+    font-weight: 500;
+  }
+
+  /* ── Page wrapper ────────────────────────────────────────── */
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 24px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ── Briefing header ─────────────────────────────────────── */
+  .briefing-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .briefing-title {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+  .briefing-date {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .weather-widget {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .weather-widget__city { color: var(--muted); font-size: 12px; }
+  .weather-widget__temp { font-size: 22px; font-weight: 600; }
+  .weather-widget__link { color: var(--teal); font-size: 12px; }
+  .weather-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--image-bg);
+    border-radius: 50%;
+  }
+
+  /* ── Section header ──────────────────────────────────────── */
+  .section-hd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-hd__label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--teal);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .section-hd__label::after {
+    content: '›';
+    font-size: 18px;
+    line-height: 1;
+  }
+  .section-hd__icon {
+    color: var(--muted);
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* ── Story cluster ───────────────────────────────────────── */
+  .cluster {
+    border: 1px solid var(--border);
+    background: var(--white);
+    margin-bottom: 12px;
+  }
+  .cluster__lead {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .cluster__image {
+    background: var(--image-bg);
+    width: 220px;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .cluster__image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--image-bg) 60%, #b8cdd8);
+    /* gradient only here as image stand-in, not a design choice */
+    display: flex;
+    align-items: flex-end;
+    padding: 8px;
+  }
+  .cluster__image-source {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--white);
+    background: rgba(0,0,0,0.45);
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+  .cluster__headline-block {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cluster__source {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .source-dot {
+    width: 14px;
+    height: 14px;
+    background: var(--border);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .cluster__headline {
+    font-size: clamp(16px, 1.8vw, 20px);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.2px;
+    color: var(--fg);
+    transition: color 0.15s;
+    cursor: pointer;
+  }
+  .cluster__headline:hover { color: var(--teal); }
+  .cluster__meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  /* related story rows */
+  .cluster__related {
+    padding: 0 20px;
+  }
+  .related-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .related-row:last-child { border-bottom: none; }
+  .related-source {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+    width: 120px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .related-body { flex: 1; }
+  .related-title {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--fg);
+    line-height: 1.4;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .related-title:hover { color: var(--teal); }
+  .related-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* see more button */
+  .see-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg);
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 12px;
+    transition: background 0.15s;
+  }
+  .see-more:hover { background: var(--bg); }
+
+  /* ── Right rail ──────────────────────────────────────────── */
+  .rail { display: flex; flex-direction: column; gap: 20px; }
+
+  .rail-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+  }
+  .rail-section__hd {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .rail-section__title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--teal);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .rail-section__title::after { content: '›'; font-size: 18px; }
+  .rail-section__icon { color: var(--muted); font-size: 15px; cursor: pointer; }
+
+  /* location pills */
+  .location-pills {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pill {
+    font-size: 13px;
+    font-weight: 400;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--fg);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    background: var(--bg);
+  }
+  .pill.active {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal);
+    font-weight: 500;
+  }
+  .pill:hover:not(.active) { background: var(--white); border-color: var(--muted); }
+
+  /* rail story item */
+  .rail-story {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .rail-story:last-child { border-bottom: none; }
+  .rail-story:hover { background: var(--bg); }
+  .rail-story__body { flex: 1; min-width: 0; }
+  .rail-story__source {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .rail-story__title {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--fg);
+    /* Clamp to 3 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.15s;
+  }
+  .rail-story:hover .rail-story__title { color: var(--teal); }
+  .rail-story__meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .rail-story__thumb {
+    width: 68px;
+    height: 52px;
+    background: var(--image-bg);
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+
+  /* picks section */
+  .picks-story {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    align-items: flex-start;
+  }
+  .picks-story:last-child { border-bottom: none; }
+  .picks-story:hover { background: var(--bg); }
+  .picks-source {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 4px;
+  }
+  .picks-title {
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--fg);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .picks-story:hover .picks-title { color: var(--teal); }
+  .picks-meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .picks-thumb {
+    width: 68px;
+    height: 52px;
+    background: var(--image-bg);
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .bookmark-icon { color: var(--muted); font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+
+  /* source favicon placeholder */
+  .favicon {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .page { grid-template-columns: 1fr; }
+    .rail { display: none; }
+    .cluster__lead { grid-template-columns: 1fr; }
+    .cluster__image { width: 100%; aspect-ratio: 16/9; }
+    .tabs .tab { padding: 12px 12px; font-size: 13px; }
+  }
+  @media (max-width: 640px) {
+    .nav__links { display: none; }
+    .nav__signin { display: none; }
+    .utility-bar { flex-direction: column; height: auto; gap: 4px; padding: 8px 16px; }
+    .page { padding: 16px; gap: 20px; }
+    .briefing-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Utility bar ───────────────────────────────────────── -->
+<div style="background: var(--bg); border-bottom: 1px solid var(--border);">
+  <div class="utility-bar">
+    <div class="utility-bar__left">
+      <a href="#">Manage topics &amp; sources</a>
+    </div>
+    <div class="utility-bar__right">
+      <a href="#">Help</a>
+      <a href="#">Settings</a>
+      <a href="#">Account</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main nav ──────────────────────────────────────────── -->
+<div class="nav-wrap">
+  <nav class="nav">
+    <!-- Logo -->
+    <a href="#" class="nav__logo">
+      <div class="nav__logo-mark">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+          <path d="M8 2 C5 2 3 4.5 3 8 C3 11.5 5.5 14 8 14 C10 14 11.5 12.5 12 11 L10 11 C9.5 12 8.8 12.5 8 12.5 C6.2 12.5 4.8 10.5 4.8 8 C4.8 5.5 6.2 3.5 8 3.5 C9.5 3.5 10.7 4.5 11.2 6 L13 6 C12.4 3.8 10.4 2 8 2Z"/>
+        </svg>
+      </div>
+      Cathay News
+    </a>
+
+    <!-- Search -->
+    <div class="nav__search">
+      <span class="nav__search-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="6.5" cy="6.5" r="4.5"/>
+          <line x1="10" y1="10" x2="14" y2="14"/>
+        </svg>
+      </span>
+      <input type="search" placeholder="Search for topics, locations &amp; sources">
+    </div>
+
+    <!-- Links -->
+    <div class="nav__links">
+      <a href="#">Help</a>
+      <a href="#">Settings</a>
+    </div>
+    <a href="#" class="nav__signin">Sign in</a>
+  </nav>
+</div>
+
+<!-- ── Category tabs ─────────────────────────────────────── -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab active">Home</div>
+    <div class="tab">For you</div>
+    <div class="tab">Following</div>
+    <div style="width:1px; background: var(--border); margin: 12px 8px; flex-shrink:0;"></div>
+    <div class="tab">Asia</div>
+    <div class="tab">World</div>
+    <div class="tab">Local</div>
+    <div class="tab">Business</div>
+    <div class="tab">Travel</div>
+    <div class="tab">Technology</div>
+    <div class="tab">Entertainment</div>
+    <div class="tab">Sports</div>
+    <div class="tab">Health</div>
+  </div>
+</div>
+
+<!-- ── Main page ─────────────────────────────────────────── -->
+<main class="page">
+
+  <!-- ── Left: feed ───────────────────────────────────────── -->
+  <div class="feed">
+
+    <!-- Briefing header -->
+    <div class="briefing-header">
+      <div>
+        <h1 class="briefing-title">Your briefing</h1>
+        <p class="briefing-date">Thursday, May 7</p>
+      </div>
+      <div class="weather-widget">
+        <button style="background:none;border:none;cursor:pointer;padding:0;color:var(--muted);">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="10,6 6,8 10,10"/>
+          </svg>
+        </button>
+        <div class="weather-icon"></div>
+        <div>
+          <div class="weather-widget__city">Hong Kong <a href="#" style="color:var(--teal);font-size:11px;">📍</a></div>
+          <div class="weather-widget__temp">28°C</div>
+          <a href="#" class="weather-widget__link">Cathay Weather</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Top stories cluster ─────────────────────────────── -->
+    <div class="section-hd">
+      <span class="section-hd__label">Top stories</span>
+    </div>
+
+    <div class="cluster" data-od-id="cluster-top">
+      <!-- Lead story -->
+      <div class="cluster__lead">
+        <div class="cluster__image">
+          <div class="cluster__image-placeholder" style="background: #d4cfc0;">
+            <span class="cluster__image-source">Reuters</span>
+          </div>
+        </div>
+        <div class="cluster__headline-block">
+          <div>
+            <div class="cluster__source">
+              <div class="source-dot" style="background:#2b2b2b;"></div>
+              The New York Times
+            </div>
+            <div class="cluster__headline">
+              Asia-Pacific leaders convene emergency summit as trade tensions escalate across the region
+            </div>
+            <p class="cluster__meta">2 hours ago · By Mei Lin &amp; James Tanaka</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related stories -->
+      <div class="cluster__related">
+        <div class="related-row">
+          <div class="related-source">
+            <div class="favicon" style="background:#1967D2;"></div>
+            DW.com
+          </div>
+          <div class="related-body">
+            <div class="related-title">G7 finance ministers signal coordinated response to tariff uncertainty</div>
+            <div class="related-meta">1 hour ago · By Stefan Weber</div>
+          </div>
+        </div>
+        <div class="related-row">
+          <div class="related-source">
+            <div class="favicon" style="background:#444;"></div>
+            The Guardian
+          </div>
+          <div class="related-body">
+            <div class="related-title">WTO warns of 1.7% contraction in global goods trade under current tariff scenario</div>
+            <div class="related-meta">5 hours ago · By Priya Mathur &amp; Sam Cole</div>
+          </div>
+        </div>
+        <div class="related-row">
+          <div class="related-source">
+            <div class="favicon" style="background:#c0392b;"></div>
+            OregonLive
+          </div>
+          <div class="related-body">
+            <div class="related-title">Pacific Rim ports brace for container volume drop ahead of summer season</div>
+            <div class="related-meta">4 hours ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="see-more">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="1" y="1" width="12" height="12" rx="2"/>
+        <line x1="7" y1="1" x2="7" y2="13"/>
+        <line x1="1" y1="7" x2="13" y2="7"/>
+      </svg>
+      See more headlines &amp; perspectives
+    </button>
+
+    <!-- ── Second story cluster ────────────────────────────── -->
+    <div class="cluster" data-od-id="cluster-aviation">
+      <div class="cluster__lead">
+        <div class="cluster__image">
+          <div class="cluster__image-placeholder" style="background: #b8cdd8;">
+            <span class="cluster__image-source">AFP</span>
+          </div>
+        </div>
+        <div class="cluster__headline-block">
+          <div>
+            <div class="cluster__source">
+              <div class="favicon" style="background:#c0392b;"></div>
+              CNN
+            </div>
+            <div class="cluster__headline">
+              Hong Kong aviation authority announces expanded runway capacity ahead of winter schedule
+            </div>
+            <p class="cluster__meta">1 hour ago · By Laura Cheung</p>
+          </div>
+        </div>
+      </div>
+      <div class="cluster__related">
+        <div class="related-row">
+          <div class="related-source">
+            <div class="favicon" style="background:#006a4e;"></div>
+            Al Jazeera
+          </div>
+          <div class="related-body">
+            <div class="related-title">Regional carriers report record load factors on Southeast Asian routes this spring</div>
+            <div class="related-meta">3 hours ago · By Amina Hassan</div>
+          </div>
+        </div>
+        <div class="related-row">
+          <div class="related-source">
+            <div class="favicon" style="background:#1a1a2e;"></div>
+            SCMP
+          </div>
+          <div class="related-body">
+            <div class="related-title">Sustainable aviation fuel mandates to take effect across EU airports by end of year</div>
+            <div class="related-meta">6 hours ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="see-more">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="1" y="1" width="12" height="12" rx="2"/>
+        <line x1="7" y1="1" x2="7" y2="13"/>
+        <line x1="1" y1="7" x2="13" y2="7"/>
+      </svg>
+      See more headlines &amp; perspectives
+    </button>
+
+    <!-- ── Third story cluster ─────────────────────────────── -->
+    <div class="cluster" data-od-id="cluster-finance">
+      <div class="cluster__lead">
+        <div class="cluster__image">
+          <div class="cluster__image-placeholder" style="background: #c8d8c8;">
+            <span class="cluster__image-source">Bloomberg</span>
+          </div>
+        </div>
+        <div class="cluster__headline-block">
+          <div>
+            <div class="cluster__source">
+              <div class="favicon" style="background:#2c3e50;"></div>
+              Financial Times
+            </div>
+            <div class="cluster__headline">
+              Hong Kong dollar peg holds steady as capital inflows accelerate through Q2
+            </div>
+            <p class="cluster__meta">18 hours ago · By David Park</p>
+          </div>
+        </div>
+      </div>
+      <div class="cluster__related">
+        <div class="related-row">
+          <div class="related-source">
+            <div class="favicon" style="background:#e74c3c;"></div>
+            Reuters
+          </div>
+          <div class="related-body">
+            <div class="related-title">HKMA issues guidance on digital currency settlement framework for interbank transfers</div>
+            <div class="related-meta">2 days ago · By Rachel Wong</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /feed -->
+
+  <!-- ── Right rail ────────────────────────────────────────── -->
+  <aside class="rail">
+
+    <!-- Local news -->
+    <div class="rail-section" data-od-id="rail-local">
+      <div class="rail-section__hd">
+        <span class="rail-section__title">Local news</span>
+        <span class="rail-section__icon">⊞</span>
+      </div>
+      <div class="location-pills">
+        <div class="pill active">Hong Kong</div>
+        <div class="pill">Kowloon</div>
+        <div class="pill">Lantau</div>
+      </div>
+      <div class="rail-story">
+        <div class="rail-story__body">
+          <div class="rail-story__source">
+            <div class="favicon" style="background:#c0392b;"></div>
+            The Standard (HK)
+          </div>
+          <div class="rail-story__title">MTR capacity upgrades approved for Tuen Ma Line as commuter volumes hit five-year high</div>
+          <div class="rail-story__meta">36 minutes ago</div>
+        </div>
+        <div class="rail-story__thumb"></div>
+      </div>
+      <div class="rail-story">
+        <div class="rail-story__body">
+          <div class="rail-story__source">
+            <div class="favicon" style="background:#c0392b;"></div>
+            The Standard (HK)
+          </div>
+          <div class="rail-story__title">Shenzhen tech corridor draws record cross-border co-investment from HK funds in April</div>
+          <div class="rail-story__meta">21 hours ago</div>
+        </div>
+        <div class="rail-story__thumb"></div>
+      </div>
+      <div class="rail-story">
+        <div class="rail-story__body">
+          <div class="rail-story__source">
+            <div class="favicon" style="background:#c0392b;"></div>
+            RTHK
+          </div>
+          <div class="rail-story__title">Head-on collision in Yuen Long under investigation; no serious injuries reported</div>
+          <div class="rail-story__meta">2 days ago</div>
+        </div>
+        <div class="rail-story__thumb"></div>
+      </div>
+    </div>
+
+    <!-- Picks for you -->
+    <div class="rail-section" data-od-id="rail-picks">
+      <div class="rail-section__hd">
+        <span class="rail-section__title">Picks for you</span>
+        <span class="rail-section__icon" title="Why these?">?</span>
+      </div>
+      <div class="picks-story">
+        <div style="flex:1;min-width:0;">
+          <div class="picks-source">
+            <div class="favicon" style="background:#8e44ad;"></div>
+            Variety
+          </div>
+          <div class="picks-title">'Daredevil' Boss on Matt Murdock's next chapter, the Defenders reunion, and what lies ahead in Season 3</div>
+          <div class="picks-meta">14 hours ago · By Jordan Moreau</div>
+        </div>
+        <div class="picks-thumb"></div>
+        <span class="bookmark-icon">
+          <svg width="12" height="14" viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 1h8v12l-4-3-4 3z"/>
+          </svg>
+        </span>
+      </div>
+      <div class="picks-story">
+        <div style="flex:1;min-width:0;">
+          <div class="picks-source">
+            <div class="favicon" style="background:#1a5276;"></div>
+            Wired
+          </div>
+          <div class="picks-title">Inside the race to build next-generation solid-state batteries for commercial aircraft</div>
+          <div class="picks-meta">1 day ago · By Clara Osei</div>
+        </div>
+        <div class="picks-thumb"></div>
+        <span class="bookmark-icon">
+          <svg width="12" height="14" viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 1h8v12l-4-3-4 3z"/>
+          </svg>
+        </span>
+      </div>
+      <div class="picks-story">
+        <div style="flex:1;min-width:0;">
+          <div class="picks-source">
+            <div class="favicon" style="background:#117a65;"></div>
+            Bloomberg CityLab
+          </div>
+          <div class="picks-title">Why Hong Kong's vertical urbanism is influencing city design in Southeast Asia</div>
+          <div class="picks-meta">2 days ago · By Ana Lima</div>
+        </div>
+        <div class="picks-thumb"></div>
+        <span class="bookmark-icon">
+          <svg width="12" height="14" viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 1h8v12l-4-3-4 3z"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+  </aside><!-- /rail -->
+
+</main>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Location pills
+  document.querySelectorAll('.pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      pill.closest('.location-pills').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

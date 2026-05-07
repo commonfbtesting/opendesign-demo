@@ -1,0 +1,1560 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Asia Miles Lifestyle Shopping — Cathay Pacific</title>
+<style>
+/* ═══════════════════════════════════════
+   DESIGN SYSTEM — DESIGN.md (Cathay Pacific)
+   ═══════════════════════════════════════ */
+:root {
+  --bg:          #f4f4f0;
+  --white:       #ffffff;
+  --fg:          #1a1a1a;
+  --muted:       #666666;
+  --border:      #e0e0dc;
+  --green-dark:  #1e3a2f;
+  --green-mid:   #2d5a45;
+  --teal:        #006564;
+  --teal-light:  #e8f4f4;
+  --image-bg:    #c8dde8;
+  --font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+
+/* ─── UTILITY BAR ─── */
+.utility-bar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.utility-bar__left { display: flex; align-items: center; gap: 20px; }
+.utility-bar__right { display: flex; align-items: center; gap: 16px; }
+.utility-bar a { color: var(--muted); transition: color 0.15s; }
+.utility-bar a:hover { color: var(--teal); }
+.util-primary { color: var(--teal) !important; font-weight: 500; }
+.util-divider { color: var(--border); user-select: none; }
+.util-icon-link { display: flex; align-items: center; gap: 4px; }
+.util-icon-link svg { width: 13px; height: 13px; stroke: currentColor; fill: none; }
+
+/* ─── MAIN NAV ─── */
+.main-nav {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 60px;
+}
+.main-nav__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  gap: 0;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-inline-end: 40px;
+  flex-shrink: 0;
+}
+.logo__brandmark {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.logo__wing {
+  width: 28px;
+  height: 28px;
+}
+.logo__text-block { line-height: 1; }
+.logo__cathay { font-size: 13px; font-weight: 700; color: var(--green-dark); letter-spacing: -0.3px; text-transform: uppercase; }
+.logo__sub { font-size: 10px; font-weight: 500; color: var(--teal); letter-spacing: 0.05em; text-transform: uppercase; }
+
+.nav-links {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  height: 60px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+.nav-link:hover { color: var(--teal); }
+.nav-link.active { color: var(--fg); border-bottom-color: var(--fg); font-weight: 500; }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-inline-start: auto;
+  flex-shrink: 0;
+}
+.nav-miles-display {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav-miles-display strong { color: var(--teal); font-weight: 600; }
+.btn-signin {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg);
+  background: var(--white);
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-signin:hover { border-color: var(--teal); color: var(--teal); }
+.btn-cart-nav {
+  position: relative;
+  padding: 8px;
+  color: var(--muted);
+  transition: color 0.15s;
+  border-radius: 4px;
+}
+.btn-cart-nav:hover { color: var(--fg); }
+.btn-cart-nav svg { width: 20px; height: 20px; }
+.cart-count {
+  position: absolute; top: 2px; right: 2px;
+  background: var(--teal); color: #fff;
+  font-size: 9px; font-weight: 700;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.btn-search-nav {
+  padding: 8px;
+  color: var(--muted);
+  transition: color 0.15s;
+}
+.btn-search-nav:hover { color: var(--fg); }
+.btn-search-nav svg { width: 18px; height: 18px; }
+
+/* ─── CATEGORY SUBNAV ─── */
+.cat-nav {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.cat-nav__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cat-nav__inner::-webkit-scrollbar { display: none; }
+.cat-tab {
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cat-tab:hover { color: var(--teal); }
+.cat-tab.active { color: var(--fg); border-bottom-color: var(--fg); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 360px;
+  display: grid;
+  grid-template-columns: 38% 62%;
+  overflow: hidden;
+}
+.hero__text-panel {
+  background: var(--bg);
+  padding: 48px 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hero__eyebrow {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--teal);
+  letter-spacing: 0.01em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hero__eyebrow::before {
+  content: '';
+  display: block;
+  width: 20px; height: 1.5px;
+  background: var(--teal);
+  flex-shrink: 0;
+}
+.hero__headline {
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: var(--fg);
+  margin-bottom: 14px;
+}
+.hero__headline em { color: var(--teal); font-style: normal; }
+.hero__body {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 320px;
+  margin-bottom: 28px;
+}
+.hero__actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.btn-cta {
+  background: var(--green-dark);
+  color: #fff;
+  padding: 13px 28px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 0;
+  transition: background 0.15s;
+  display: inline-block;
+}
+.btn-cta:hover { background: var(--green-mid); }
+.hero-learn-link {
+  font-size: 13px;
+  color: var(--teal);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+.hero-learn-link:hover { border-bottom-color: var(--teal); }
+
+/* hero slider dots */
+.hero__slider-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+}
+.hero__dot {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  padding-bottom: 2px;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.hero__dot.active { font-weight: 700; color: var(--fg); border-bottom-color: var(--fg); }
+.hero__pause {
+  margin-inline-start: auto;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.hero__pause:hover { color: var(--fg); }
+
+.hero__image-panel {
+  background: var(--image-bg);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero__image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+}
+.hero__image-placeholder svg { width: 48px; height: 48px; stroke: rgba(255,255,255,0.4); fill: none; }
+.hero__image-placeholder span { font-size: 12px; opacity: 0.6; }
+/* campaign tag top-left on image panel */
+.hero__campaign-tag {
+  position: absolute;
+  top: 20px; left: 20px;
+  background: var(--green-dark);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+}
+
+/* ─── SECTION WRAPPER ─── */
+.section-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ─── PROMO TILES ─── */
+.promo-section {
+  padding: 28px 0;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.promo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.promo-tile {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.promo-tile:hover { border-color: var(--teal); }
+.promo-tile__img {
+  background: var(--image-bg);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.45);
+  font-size: 11px;
+  flex-direction: column;
+  gap: 6px;
+}
+.promo-tile__img svg { width: 28px; height: 28px; stroke: rgba(255,255,255,0.45); fill: none; }
+.promo-tile__body { padding: 16px; }
+.promo-tile__eyebrow { font-size: 11px; font-weight: 500; color: var(--teal); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.promo-tile__title { font-size: 14px; font-weight: 600; color: var(--fg); line-height: 1.3; margin-bottom: 6px; }
+.promo-tile__sub { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.promo-tile__cta { display: inline-block; margin-top: 10px; font-size: 12px; font-weight: 500; color: var(--teal); }
+.promo-tile__cta:hover { text-decoration: underline; }
+
+/* ─── SHOP LAYOUT ─── */
+.shop-section { padding: 32px 0 56px; }
+.shop-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* ─── SIDEBAR FILTERS ─── */
+.sidebar { font-size: 13px; }
+.sidebar__section { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 20px; }
+.sidebar__section:last-child { border-bottom: none; margin-bottom: 0; }
+.sidebar__title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  cursor: pointer;
+  color: var(--fg);
+  transition: color 0.15s;
+}
+.filter-option:hover { color: var(--teal); }
+.filter-option input[type="checkbox"] { accent-color: var(--teal); width: 14px; height: 14px; }
+.filter-option span { flex: 1; }
+.filter-option .count { font-size: 11px; color: var(--muted); }
+.price-range { margin-top: 8px; }
+.price-range input[type="range"] { width: 100%; accent-color: var(--teal); }
+.price-range__vals { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 4px; }
+.clear-filters { font-size: 12px; color: var(--teal); cursor: pointer; margin-top: 8px; display: block; }
+.clear-filters:hover { text-decoration: underline; }
+
+/* miles earn range chips */
+.miles-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  margin: 3px 3px 3px 0;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.miles-chip:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+.miles-chip.active { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+
+/* ─── PRODUCT AREA ─── */
+.product-area {}
+.product-area__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.product-area__title { font-size: 18px; font-weight: 600; color: var(--fg); letter-spacing: -0.3px; }
+.product-area__count { font-size: 13px; color: var(--muted); margin-inline-start: 8px; }
+.product-area__sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.sort-select {
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--fg);
+  background: var(--white);
+  font-family: var(--font);
+  cursor: pointer;
+  border-radius: 0;
+  appearance: none;
+  padding-inline-end: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.filter-chips-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.f-chip {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.f-chip:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+.f-chip.active { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+
+/* ─── PRODUCT GRID ─── */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.product-card {
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: background 0.15s;
+  position: relative;
+}
+.product-card:hover { background: #fafaf8; }
+
+.product-card__image-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.product-card__img-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 11px;
+  opacity: 0.5;
+  text-align: center;
+  padding: 12px;
+}
+.product-card__img-placeholder svg { width: 32px; height: 32px; stroke: var(--muted); fill: none; }
+
+.product-card__badges {
+  position: absolute;
+  top: 8px; left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 2;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 6px;
+  letter-spacing: 0.03em;
+}
+.badge--sale { background: #c0392b; color: #fff; }
+.badge--new { background: var(--teal); color: #fff; }
+.badge--exclusive { background: var(--green-dark); color: #fff; }
+
+.product-card__wishlist {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 28px; height: 28px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted);
+  z-index: 2;
+  transition: color 0.15s;
+  cursor: pointer;
+}
+.product-card__wishlist:hover { color: #c0392b; }
+.product-card__wishlist svg { width: 14px; height: 14px; }
+
+.product-card__body { padding: 14px 16px 12px; flex: 1; display: flex; flex-direction: column; }
+.product-card__brand { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.product-card__name { font-size: 14px; font-weight: 500; color: var(--fg); line-height: 1.35; margin-bottom: 8px; flex: 1; }
+
+.product-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.stars { color: #d4a017; letter-spacing: -1px; font-size: 12px; }
+
+.product-card__price { margin-bottom: 10px; }
+.price-current { font-size: 16px; font-weight: 600; color: var(--fg); }
+.price-original { font-size: 13px; color: var(--muted); text-decoration: line-through; margin-inline-start: 6px; }
+
+.miles-earn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--teal-light);
+  border: 1px solid #b3d9d9;
+  padding: 5px 10px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.miles-earn__num { font-weight: 700; color: var(--teal); font-size: 13px; }
+.miles-earn__label { color: var(--muted); font-size: 11px; }
+
+.btn-add-cart {
+  width: 100%;
+  background: var(--green-dark);
+  color: #fff;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 0;
+  transition: background 0.15s;
+  text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-add-cart:hover { background: var(--green-mid); }
+.btn-add-cart svg { width: 14px; height: 14px; stroke: #fff; fill: none; }
+
+/* ─── PAGINATION ─── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 32px 0 0;
+}
+.page-btn {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+}
+.page-btn:hover { border-color: var(--teal); color: var(--teal); }
+.page-btn.active { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+.page-btn.arrow { font-size: 16px; }
+
+/* ─── FEATURED BANNER (mid-page) ─── */
+.mid-banner {
+  background: var(--green-dark);
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  min-height: 200px;
+  overflow: hidden;
+}
+.mid-banner__text {
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+}
+.mid-banner__eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 10px; }
+.mid-banner__title { font-size: 26px; font-weight: 700; line-height: 1.2; letter-spacing: -0.3px; margin-bottom: 12px; }
+.mid-banner__body { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 24px; max-width: 480px; }
+.btn-cta-light {
+  display: inline-block;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  color: #fff;
+  padding: 11px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 20px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.btn-cta-light:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
+.mid-banner__img {
+  background: #16312a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.2);
+  font-size: 12px;
+  flex-direction: column;
+  gap: 10px;
+}
+.mid-banner__img svg { width: 40px; height: 40px; stroke: rgba(255,255,255,0.2); fill: none; }
+
+/* ─── FOOTER ─── */
+.site-footer {
+  background: var(--green-dark);
+  color: rgba(255,255,255,0.6);
+  padding: 48px 0 0;
+  margin-top: 0;
+  border-top: none;
+}
+.footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.footer-brand__logo { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -0.3px; margin-bottom: 4px; }
+.footer-brand__sub { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+.footer-brand__copy { font-size: 13px; line-height: 1.6; max-width: 260px; }
+.footer-col__title { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
+.footer-col__links { display: flex; flex-direction: column; gap: 9px; }
+.footer-col__links a { font-size: 13px; color: rgba(255,255,255,0.6); transition: color 0.15s; }
+.footer-col__links a:hover { color: #fff; }
+.footer-bottom {
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.footer-legal { display: flex; gap: 20px; }
+.footer-legal a { color: rgba(255,255,255,0.4); transition: color 0.15s; }
+.footer-legal a:hover { color: rgba(255,255,255,0.7); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero__image-panel { height: 240px; }
+  .promo-grid { grid-template-columns: 1fr 1fr; }
+  .shop-layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .mid-banner { grid-template-columns: 1fr; }
+  .mid-banner__img { height: 140px; }
+}
+@media (max-width: 640px) {
+  .utility-bar { flex-direction: column; height: auto; padding: 8px 24px; gap: 6px; font-size: 11px; }
+  .nav-links { display: none; }
+  .promo-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; gap: 20px; }
+  .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+  .footer-legal { flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .hero__text-panel { padding: 32px 24px; }
+  .cat-tab { padding: 12px 12px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── UTILITY BAR ─── -->
+<div class="utility-bar">
+  <div class="utility-bar__left">
+    <a href="#" class="util-primary">Asia Miles</a>
+    <span class="util-divider">|</span>
+    <a href="#">Flights</a>
+    <a href="#">Hotels &amp; Holidays</a>
+    <a href="#">Lifestyle Shopping</a>
+    <a href="#">Asia Miles Pay</a>
+    <a href="#">Dining &amp; Leisure</a>
+    <a href="#">Experiences</a>
+  </div>
+  <div class="utility-bar__right">
+    <a href="#" class="util-icon-link">
+      <svg viewBox="0 0 16 16"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+      My Account
+    </a>
+    <a href="#" class="util-icon-link">
+      <svg viewBox="0 0 16 16"><path d="M8 1l2 4 5 .7-3.5 3.4.8 4.9L8 11.5l-4.3 2.5.8-4.9L1 5.7 6 5z"/></svg>
+      1,250,480 miles
+    </a>
+    <a href="#">Help</a>
+  </div>
+</div>
+
+<!-- ─── MAIN NAV ─── -->
+<nav class="main-nav">
+  <div class="main-nav__inner">
+    <!-- Logo -->
+    <a class="logo" href="#">
+      <div class="logo__brandmark">
+        <svg class="logo__wing" viewBox="0 0 32 32" fill="none">
+          <!-- Stylised Cathay brushstroke wing mark -->
+          <path d="M4 24 C8 16, 16 8, 28 6" stroke="#1e3a2f" stroke-width="3" stroke-linecap="round"/>
+          <path d="M4 24 C12 20, 22 16, 28 10" stroke="#006564" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          <path d="M4 24 C10 22, 20 22, 28 14" stroke="#006564" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="logo__text-block">
+        <div class="logo__cathay">Cathay</div>
+        <div class="logo__sub">Asia Miles</div>
+      </div>
+    </a>
+
+    <!-- Nav links -->
+    <div class="nav-links" role="tablist">
+      <div class="nav-link" role="tab">Earn Miles</div>
+      <div class="nav-link active" role="tab">Shopping</div>
+      <div class="nav-link" role="tab">Travel</div>
+      <div class="nav-link" role="tab">Dining</div>
+      <div class="nav-link" role="tab">Experiences</div>
+      <div class="nav-link" role="tab">Redeem Miles</div>
+      <div class="nav-link" role="tab">Promotions</div>
+    </div>
+
+    <!-- Right actions -->
+    <div class="nav-right">
+      <div class="nav-miles-display">
+        Balance: <strong>1,250,480 mi</strong>
+      </div>
+      <button class="btn-search-nav" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="btn-cart-nav" aria-label="Cart (2 items)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-count">2</span>
+      </button>
+      <button class="btn-signin">Sign In</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── CATEGORY SUBNAV ─── -->
+<div class="cat-nav">
+  <div class="cat-nav__inner">
+    <div class="cat-tab active">All Categories</div>
+    <div class="cat-tab">Electronics</div>
+    <div class="cat-tab">Travel Essentials</div>
+    <div class="cat-tab">Fashion &amp; Accessories</div>
+    <div class="cat-tab">Beauty &amp; Wellness</div>
+    <div class="cat-tab">Food &amp; Beverage</div>
+    <div class="cat-tab">Home &amp; Living</div>
+    <div class="cat-tab">Experiences</div>
+    <div class="cat-tab">CX Exclusive</div>
+    <div class="cat-tab">Brands</div>
+  </div>
+</div>
+
+<!-- ─── HERO BANNER ─── -->
+<section class="hero" aria-label="Featured offer">
+  <div class="hero__text-panel">
+    <div class="hero__eyebrow">Lifestyle Privileges</div>
+    <h1 class="hero__headline">Earn <em>triple miles</em><br>on every purchase</h1>
+    <p class="hero__body">Shop from over 500 lifestyle brands and earn Asia Miles on every dollar spent. Redeem for flights, upgrades, and more.</p>
+    <div class="hero__actions">
+      <a href="#" class="btn-cta">Shop Now</a>
+      <a href="#" class="hero-learn-link">How miles work →</a>
+    </div>
+    <div class="hero__slider-ctrl">
+      <span class="hero__dot active">01</span>
+      <span class="hero__dot">02</span>
+      <span class="hero__dot">03</span>
+      <span class="hero__dot">04</span>
+      <span class="hero__pause">⏸</span>
+    </div>
+  </div>
+  <div class="hero__image-panel">
+    <div class="hero__campaign-tag">Limited Offer</div>
+    <div class="hero__image-placeholder">
+      <svg viewBox="0 0 48 48"><rect x="4" y="12" width="40" height="28" rx="2"/><circle cx="15" cy="20" r="4"/><path d="M4 32l10-8 8 6 8-10 14 18"/></svg>
+      <span>Hero campaign image</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROMO TILES ─── -->
+<section class="promo-section">
+  <div class="section-wrap">
+    <div class="promo-grid">
+      <!-- Tile 1 -->
+      <div class="promo-tile">
+        <div class="promo-tile__img">
+          <svg viewBox="0 0 32 32"><rect x="4" y="8" width="24" height="16" rx="1"/><path d="M10 24v3M22 24v3M7 27h18"/></svg>
+          Image
+        </div>
+        <div class="promo-tile__body">
+          <div class="promo-tile__eyebrow">Electronics</div>
+          <div class="promo-tile__title">Apple MacBook Pro 14" — M3 Pro</div>
+          <div class="promo-tile__sub">Earn up to 12,000 miles on this purchase</div>
+          <a href="#" class="promo-tile__cta">View offer →</a>
+        </div>
+      </div>
+      <!-- Tile 2 -->
+      <div class="promo-tile">
+        <div class="promo-tile__img">
+          <svg viewBox="0 0 32 32"><path d="M16 4a8 8 0 100 16A8 8 0 0016 4zM4 28s2-6 12-6 12 6 12 6"/></svg>
+          Image
+        </div>
+        <div class="promo-tile__body">
+          <div class="promo-tile__eyebrow">CX Exclusive</div>
+          <div class="promo-tile__title">Marco Polo Club Premium Carry-On</div>
+          <div class="promo-tile__sub">Earn 4× miles — Marco Polo members only</div>
+          <a href="#" class="promo-tile__cta">View offer →</a>
+        </div>
+      </div>
+      <!-- Tile 3 -->
+      <div class="promo-tile">
+        <div class="promo-tile__img">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M12 10l8 6-8 6"/></svg>
+          Image
+        </div>
+        <div class="promo-tile__body">
+          <div class="promo-tile__eyebrow">Travel</div>
+          <div class="promo-tile__title">Samsonite Lite-Box Hardside Spinner</div>
+          <div class="promo-tile__sub">10% off + 3,200 Asia Miles</div>
+          <a href="#" class="promo-tile__cta">View offer →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MAIN SHOP ─── -->
+<section class="shop-section">
+  <div class="section-wrap">
+    <div class="shop-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar" aria-label="Filters">
+        <div class="sidebar__section">
+          <div class="sidebar__title">Categories</div>
+          <label class="filter-option"><input type="checkbox" checked> <span>Electronics</span> <span class="count">148</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>Travel Essentials</span> <span class="count">87</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>Fashion &amp; Accessories</span> <span class="count">213</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>Beauty &amp; Wellness</span> <span class="count">95</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>Home &amp; Living</span> <span class="count">62</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>Food &amp; Beverage</span> <span class="count">44</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>CX Exclusive</span> <span class="count">18</span></label>
+        </div>
+
+        <div class="sidebar__section">
+          <div class="sidebar__title">Miles Earn</div>
+          <div>
+            <span class="miles-chip active">500+ mi</span>
+            <span class="miles-chip">1,000+ mi</span>
+            <span class="miles-chip">5,000+ mi</span>
+            <span class="miles-chip">10,000+ mi</span>
+          </div>
+        </div>
+
+        <div class="sidebar__section">
+          <div class="sidebar__title">Price (HKD)</div>
+          <div class="price-range">
+            <input type="range" min="0" max="20000" value="8000">
+            <div class="price-range__vals"><span>HK$0</span><span>HK$20,000</span></div>
+          </div>
+        </div>
+
+        <div class="sidebar__section">
+          <div class="sidebar__title">Brands</div>
+          <label class="filter-option"><input type="checkbox"> <span>Apple</span> <span class="count">24</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>Sony</span> <span class="count">18</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>Bose</span> <span class="count">12</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>Samsonite</span> <span class="count">9</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>DJI</span> <span class="count">7</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>Dyson</span> <span class="count">11</span></label>
+          <a href="#" class="clear-filters">Show more brands</a>
+        </div>
+
+        <div class="sidebar__section">
+          <div class="sidebar__title">Customer Rating</div>
+          <label class="filter-option"><input type="checkbox"> <span>4★ &amp; above</span> <span class="count">92</span></label>
+          <label class="filter-option"><input type="checkbox"> <span>3★ &amp; above</span> <span class="count">134</span></label>
+        </div>
+
+        <a href="#" class="clear-filters">Clear all filters</a>
+      </aside>
+
+      <!-- PRODUCT AREA -->
+      <div class="product-area">
+        <div class="product-area__header">
+          <div>
+            <span class="product-area__title">Cathay Pacific</span>
+            <span class="product-area__count">648 products</span>
+          </div>
+          <div class="product-area__sort">
+            Sort by:
+            <select class="sort-select" aria-label="Sort products">
+              <option>Best Selling</option>
+              <option>Miles: High to Low</option>
+              <option>Price: Low to High</option>
+              <option>Price: High to Low</option>
+              <option>Newest Arrivals</option>
+              <option>Top Rated</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quick filter chips -->
+        <div class="filter-chips-bar">
+          <span class="f-chip active">All</span>
+          <span class="f-chip">On Sale</span>
+          <span class="f-chip">New Arrivals</span>
+          <span class="f-chip">CX Exclusive</span>
+          <span class="f-chip">Free Shipping</span>
+          <span class="f-chip">Triple Miles</span>
+        </div>
+
+        <!-- Product grid (12 cards) -->
+        <div class="product-grid">
+
+          <!-- 1 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <div class="product-card__badges">
+                <span class="badge badge--sale">−15%</span>
+                <span class="badge badge--exclusive">CX Exclusive</span>
+              </div>
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><rect x="4" y="8" width="40" height="28" rx="2"/><circle cx="14" cy="18" r="4"/><path d="M4 30l12-10 10 8 6-7 12 15"/></svg>
+                Apple MacBook Pro
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Apple</div>
+              <div class="product-card__name">MacBook Pro 14" M3 Pro, 18GB RAM, 512GB</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★★</span>
+                <span>4.8 (132)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$14,999</span>
+                <span class="price-original">HK$17,599</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">12,000</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <div class="product-card__badges">
+                <span class="badge badge--new">New</span>
+              </div>
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16"/><path d="M16 24l6 6 10-12"/></svg>
+                Sony WH-1000XM5
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Sony</div>
+              <div class="product-card__name">WH-1000XM5 Wireless Noise Cancelling Headphones</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★★</span>
+                <span>4.9 (308)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$2,699</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">2,160</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <div class="product-card__badges">
+                <span class="badge badge--sale">−10%</span>
+              </div>
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><path d="M8 36V20l16-12 16 12v16H8z"/><path d="M18 36V28h12v8"/></svg>
+                Dyson V15 Detect
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Dyson</div>
+              <div class="product-card__name">V15 Detect Absolute Cordless Vacuum</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★☆</span>
+                <span>4.6 (89)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$5,490</span>
+                <span class="price-original">HK$6,100</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">4,392</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><rect x="8" y="16" width="32" height="20" rx="2"/><path d="M16 16V12a8 8 0 0116 0v4"/></svg>
+                Samsonite Lite-Box
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Samsonite</div>
+              <div class="product-card__name">Lite-Box Hardside Spinner 69cm — Midnight Blue</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★★</span>
+                <span>4.7 (201)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$3,199</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">2,560</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 5 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <div class="product-card__badges">
+                <span class="badge badge--exclusive">CX Exclusive</span>
+              </div>
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><path d="M24 6l4 8 9 1.3-6.5 6.3 1.5 9L24 26l-8 4.6 1.5-9L11 15.3l9-1.3z"/></svg>
+                ALCA Amenity Kit
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Cathay Pacific</div>
+              <div class="product-card__name">Business Class ALCA Amenity Kit — The Peninsula Edition</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★★</span>
+                <span>4.9 (44)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$880</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">704</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 6 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <div class="product-card__badges">
+                <span class="badge badge--sale">−20%</span>
+              </div>
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="14"/><path d="M20 20h8M20 24h8M20 28h6"/></svg>
+                Bose QuietComfort
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Bose</div>
+              <div class="product-card__name">QuietComfort Ultra Earbuds — Soapstone</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★☆</span>
+                <span>4.5 (167)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$1,999</span>
+                <span class="price-original">HK$2,499</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">1,600</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 7 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <div class="product-card__badges">
+                <span class="badge badge--new">New</span>
+              </div>
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><rect x="10" y="18" width="28" height="20" rx="2"/><circle cx="24" cy="12" r="6"/></svg>
+                DJI Mini 4 Pro
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">DJI</div>
+              <div class="product-card__name">Mini 4 Pro Drone — Fly More Combo (DJI RC 2)</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★★</span>
+                <span>4.8 (56)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$7,299</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">5,840</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 8 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><rect x="12" y="8" width="24" height="36" rx="3"/><circle cx="24" cy="40" r="2"/><line x1="18" y1="14" x2="30" y2="14"/></svg>
+                iPhone 16 Pro
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Apple</div>
+              <div class="product-card__name">iPhone 16 Pro 256GB — Desert Titanium</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★★</span>
+                <span>4.9 (412)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$8,999</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">7,200</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 9 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <div class="product-card__badges">
+                <span class="badge badge--sale">−8%</span>
+              </div>
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><path d="M24 8c-6.6 0-12 5.4-12 12 0 9 12 22 12 22s12-13 12-22c0-6.6-5.4-12-12-12z"/><circle cx="24" cy="20" r="4" fill="white"/></svg>
+                Rimowa Classic
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Rimowa</div>
+              <div class="product-card__name">Classic Cabin — Glossy Black Aluminium</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★★</span>
+                <span>4.9 (78)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$6,490</span>
+                <span class="price-original">HK$7,050</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">5,192</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 10 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><rect x="6" y="20" width="36" height="20" rx="3"/><path d="M12 20v-6a12 12 0 0124 0v6"/></svg>
+                Hermès Leather Passport
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Hermès</div>
+              <div class="product-card__name">Passport Holder — Togo Calfskin, Fauve</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★★</span>
+                <span>5.0 (12)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$4,980</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">3,984</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 11 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <div class="product-card__badges">
+                <span class="badge badge--new">New</span>
+              </div>
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><path d="M8 28c0-8.8 7.2-16 16-16s16 7.2 16 16M8 28v8h32v-8"/><path d="M16 28v-4h16v4"/></svg>
+                Nespresso Vertuo
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Nespresso</div>
+              <div class="product-card__name">Vertuo Next Premium Coffee Machine — Mango Yellow</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★☆</span>
+                <span>4.4 (234)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$1,280</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">1,024</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- 12 -->
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              <div class="product-card__badges">
+                <span class="badge badge--sale">−12%</span>
+              </div>
+              <button class="product-card__wishlist" aria-label="Save to wishlist">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
+              <div class="product-card__img-placeholder">
+                <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18"/><path d="M16 24l5 5 11-10"/></svg>
+                Oura Ring Gen 3
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__brand">Oura</div>
+              <div class="product-card__name">Ring Gen 3 Heritage — Size 8, Stealth Black</div>
+              <div class="product-card__rating">
+                <span class="stars">★★★★☆</span>
+                <span>4.6 (91)</span>
+              </div>
+              <div class="product-card__price">
+                <span class="price-current">HK$2,199</span>
+                <span class="price-original">HK$2,499</span>
+              </div>
+              <div class="miles-earn">
+                <span class="miles-earn__num">1,760</span>
+                <span class="miles-earn__label">Asia Miles earned</span>
+              </div>
+              <button class="btn-add-cart">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+        </div><!-- /product-grid -->
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <button class="page-btn arrow">‹</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <span style="color:var(--muted); padding: 0 4px;">…</span>
+          <button class="page-btn">24</button>
+          <button class="page-btn arrow">›</button>
+        </div>
+      </div><!-- /product-area -->
+
+    </div><!-- /shop-layout -->
+  </div><!-- /section-wrap -->
+</section>
+
+<!-- ─── MID-PAGE BANNER ─── -->
+<div class="mid-banner">
+  <div class="mid-banner__text">
+    <div class="mid-banner__eyebrow">Asia Miles Pay</div>
+    <div class="mid-banner__title">Pay with miles — no minimum</div>
+    <p class="mid-banner__body">Use your Asia Miles as currency on every Lifestyle Shopping purchase. Partial redemption available — combine miles and cash in any ratio.</p>
+    <a href="#" class="btn-cta-light">Learn about Miles Pay →</a>
+  </div>
+  <div class="mid-banner__img">
+    <svg viewBox="0 0 48 48" style="width:48px;height:48px;"><rect x="6" y="14" width="36" height="24" rx="3"/><line x1="6" y1="22" x2="42" y2="22"/><rect x="10" y="28" width="8" height="4" rx="1"/></svg>
+    <span style="font-size:11px;">Promo image placeholder</span>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand__logo">Asia Miles</div>
+        <div class="footer-brand__sub">Cathay Pacific Airways</div>
+        <p class="footer-brand__copy">Asia Miles is the frequent flyer programme of Cathay Pacific. Earn and redeem miles on flights, hotels, shopping, dining, and more.</p>
+      </div>
+      <div>
+        <div class="footer-col__title">Shopping</div>
+        <div class="footer-col__links">
+          <a href="#">Electronics</a>
+          <a href="#">Travel Essentials</a>
+          <a href="#">Fashion &amp; Accessories</a>
+          <a href="#">Beauty &amp; Wellness</a>
+          <a href="#">Home &amp; Living</a>
+          <a href="#">CX Exclusive</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col__title">Asia Miles</div>
+        <div class="footer-col__links">
+          <a href="#">How to Earn</a>
+          <a href="#">How to Redeem</a>
+          <a href="#">Asia Miles Pay</a>
+          <a href="#">Marco Polo Club</a>
+          <a href="#">Partners &amp; Offers</a>
+          <a href="#">Miles Calculator</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col__title">Support</div>
+        <div class="footer-col__links">
+          <a href="#">FAQ</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Shipping Policy</a>
+          <a href="#">Returns &amp; Refunds</a>
+          <a href="#">Order Tracking</a>
+          <a href="#">Member Login</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Cathay Pacific Airways Ltd. All rights reserved.</span>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms &amp; Conditions</a>
+        <a href="#">Cookie Settings</a>
+        <a href="#">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Tab interactivity ── */
+document.querySelectorAll('.nav-link').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-link').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.cat-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.f-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.f-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.miles-chip').forEach(chip => {
+  chip.addEventListener('click', () => chip.classList.toggle('active'));
+});
+
+/* ── Hero slider dots ── */
+document.querySelectorAll('.hero__dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    document.querySelectorAll('.hero__dot').forEach(d => d.classList.remove('active'));
+    dot.classList.add('active');
+  });
+});
+
+/* ── Wishlist toggle ── */
+document.querySelectorAll('.product-card__wishlist').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const svg = btn.querySelector('svg');
+    const filled = btn.dataset.filled === 'true';
+    btn.dataset.filled = !filled;
+    svg.style.fill = filled ? 'none' : '#c0392b';
+    svg.style.stroke = filled ? 'currentColor' : '#c0392b';
+  });
+});
+
+/* ── Cart button feedback ── */
+document.querySelectorAll('.btn-add-cart').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const original = btn.textContent.trim();
+    btn.textContent = 'Added!';
+    btn.style.background = 'var(--teal)';
+    setTimeout(() => {
+      btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#fff;fill:none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Add to Cart`;
+      btn.style.background = 'var(--green-dark)';
+    }, 1400);
+  });
+});
+</script>
+</body>
+</html>
