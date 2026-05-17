@@ -1,5 +1,5 @@
 # Figma to Code
-- Step 1: Download .fig (local copy)
+- Step 1: Download .fig from Figma (In this example, we use https://www.figma.com/design/ZVS8UoRgPIZ5CJRpQiRcQM/)
 - Step 2: use fig2json (https://github.com/kreako/fig2json) to generate canvas.json, canvas.raw.json, resources
 - Step 3: use Github Copilot Claude Sonnet 4.6 to generate website
 - Example prompt: Use information from canvas.json and canvas.raw.json to reconstruct the entire UI/UX website.
