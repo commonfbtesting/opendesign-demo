@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visual Designer — Portfolio Template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">Logo</a>
+      <ul class="nav__menu">
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#contact" class="nav__cta">Contact</a>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HEADER SECTION
+       ============================================================ -->
+  <section class="header-section" id="about">
+    <div class="header-section__inner">
+      <div class="header-content">
+        <p class="header-content__subtitle">Branding | Image making</p>
+        <h1 class="header-content__title">Visual<br>Designer</h1>
+        <p class="header-content__desc">
+          This is a template Figma file, turned into code using Anima.
+          Learn more at AnimaApp.com
+        </p>
+        <a href="#contact" class="btn btn--dark">Contact</a>
+      </div>
+      <div class="header-image">
+        <img
+          src="../figma-json/v3/images/a2d1b3a41cc9761b3e8b3609af7fffb76a2461f9.png"
+          alt="Designer portrait"
+          width="480"
+          height="360"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LOGO BAR
+       ============================================================ -->
+  <div class="logo-bar">
+    <div class="logo-bar__inner">
+
+      <!-- Figma-style wordmark -->
+      <div class="logo-bar__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 3a3 3 0 0 0 0 6h3V3H8Zm3 0h5a3 3 0 0 1 0 6h-5V3ZM8 15a3 3 0 1 0 0-6H5v3a3 3 0 0 0 3 3Zm3-6v6h3a3 3 0 0 0 0-6h-3Zm0 9a3 3 0 1 0 6 0 3 3 0 0 0-6 0Z"/>
+        </svg>
+        Figma
+      </div>
+
+      <!-- Vue-style wordmark -->
+      <div class="logo-bar__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M2 3h4l6 10L18 3h4L12 21 2 3Zm4 0 6 10 6-10H14l-2 4-2-4H6Z"/>
+        </svg>
+        Vue
+      </div>
+
+      <!-- React-style wordmark -->
+      <div class="logo-bar__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="2"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(60 12 12)"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(120 12 12)"/>
+        </svg>
+        React
+      </div>
+
+      <!-- Sketch-style wordmark -->
+      <div class="logo-bar__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 9 12 3l8 6-3 10H7L4 9Z"/>
+        </svg>
+        Sketch
+      </div>
+
+      <!-- Webflow wordmark -->
+      <div class="logo-bar__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 5l4 10 3-6 3 6 3-8 3 8h2"/>
+        </svg>
+        Webflow
+      </div>
+
+      <!-- Notion wordmark -->
+      <div class="logo-bar__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="3" width="16" height="18" rx="2"/>
+          <path d="M8 8h8M8 12h5M8 16h3"/>
+        </svg>
+        Notion
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SKILLS SECTION
+       ============================================================ -->
+  <section class="skills-section" id="about-skills">
+    <div class="skills-section__inner">
+      <h2 class="section-heading">Skills</h2>
+      <div class="skills-grid">
+
+        <!-- Card 1 — Green -->
+        <div class="skill-card">
+          <div class="skill-card__icon skill-card__icon--green">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="skill-card__title">UI Design</h3>
+            <p class="skill-card__desc">
+              This is a template Figma file, turned into code using Anima.
+              Learn more at AnimaApp.com
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2 — Red -->
+        <div class="skill-card">
+          <div class="skill-card__icon skill-card__icon--red">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v4l3 3"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="skill-card__title">Branding</h3>
+            <p class="skill-card__desc">
+              This is a template Figma file, turned into code using Anima.
+              Learn more at AnimaApp.com
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 3 — Yellow -->
+        <div class="skill-card">
+          <div class="skill-card__icon skill-card__icon--yellow">
+            <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke: #2d2d2d">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5Z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="skill-card__title">Art Direction</h3>
+            <p class="skill-card__desc">
+              This is a template Figma file, turned into code using Anima.
+              Learn more at AnimaApp.com
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GALLERY SECTION
+       ============================================================ -->
+  <section class="gallery-section" id="work">
+    <div class="gallery-section__inner">
+      <h2 class="section-heading">Latest work</h2>
+      <div class="gallery-grid">
+
+        <div class="gallery-card">
+          <div class="gallery-card__image">
+            <img src="../figma-json/v3/images/46acf5070c2b1eabe533e70cdfd6db0920cb88be.jpg" alt="Project 1" />
+          </div>
+          <h3 class="gallery-card__title">Project title</h3>
+          <p class="gallery-card__category">UI, Art direction</p>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-card__image">
+            <img src="../figma-json/v3/images/ae5d91180b98e9e0920120c3b24ffbfe143d83cd.jpg" alt="Project 2" />
+          </div>
+          <h3 class="gallery-card__title">Project title</h3>
+          <p class="gallery-card__category">UI, Art direction</p>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-card__image">
+            <img src="../figma-json/v3/images/3879de03212eab7e4fafca5165c55a151eca4a48.jpg" alt="Project 3" />
+          </div>
+          <h3 class="gallery-card__title">Project title</h3>
+          <p class="gallery-card__category">UI, Art direction</p>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-card__image">
+            <img src="../figma-json/v3/images/7f90acac1fbd66440efa4e3870e0cd0b032f803b.jpg" alt="Project 4" />
+          </div>
+          <h3 class="gallery-card__title">Project title</h3>
+          <p class="gallery-card__category">UI, Art direction</p>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-card__image">
+            <img src="../figma-json/v3/images/b15b0bea6c6f30cc354e8fe19b0d226e83daf314.jpg" alt="Project 5" />
+          </div>
+          <h3 class="gallery-card__title">Project title</h3>
+          <p class="gallery-card__category">UI, Art direction</p>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-card__image">
+            <img src="../figma-json/v3/images/eae313a48883a46e7a2a60ee806e73a8052191be.png" alt="Project 6" />
+          </div>
+          <h3 class="gallery-card__title">Project title</h3>
+          <p class="gallery-card__category">UI, Art direction</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TESTIMONIAL SECTION
+       ============================================================ -->
+  <section class="testimonial-section">
+    <div class="testimonial-section__inner">
+      <h2 class="section-heading">Testimonial</h2>
+      <div class="testimonial-grid">
+
+        <div class="testimonial-card">
+          <p class="testimonial-card__quote">
+            "This is a template Figma file, turned into code using Anima.
+            Learn more at AnimaApp.com"
+          </p>
+          <div class="testimonial-card__client">
+            <div class="testimonial-card__avatar">
+              <img src="../figma-json/v3/images/e754ca731f89f5fd075dc47dcfd0ee6980216065.png" alt="Gemma Nolen" />
+            </div>
+            <div>
+              <div class="stars">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+              <p class="testimonial-card__name">Gemma Nolen</p>
+              <p class="testimonial-card__company">Google</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <p class="testimonial-card__quote">
+            "This is a template Figma file, turned into code using Anima.
+            Learn more at AnimaApp.com"
+          </p>
+          <div class="testimonial-card__client">
+            <div class="testimonial-card__avatar">
+              <img src="../figma-json/v3/images/e754ca731f89f5fd075dc47dcfd0ee6980216065.png" alt="Gemma Nolen" />
+            </div>
+            <div>
+              <div class="stars">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+              <p class="testimonial-card__name">Gemma Nolen</p>
+              <p class="testimonial-card__company">Google</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <p class="testimonial-card__quote">
+            "This is a template Figma file, turned into code using Anima.
+            Learn more at AnimaApp.com"
+          </p>
+          <div class="testimonial-card__client">
+            <div class="testimonial-card__avatar">
+              <img src="../figma-json/v3/images/e754ca731f89f5fd075dc47dcfd0ee6980216065.png" alt="Gemma Nolen" />
+            </div>
+            <div>
+              <div class="stars">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+              <p class="testimonial-card__name">Gemma Nolen</p>
+              <p class="testimonial-card__company">Google</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <p class="testimonial-card__quote">
+            "This is a template Figma file, turned into code using Anima.
+            Learn more at AnimaApp.com"
+          </p>
+          <div class="testimonial-card__client">
+            <div class="testimonial-card__avatar">
+              <img src="../figma-json/v3/images/e754ca731f89f5fd075dc47dcfd0ee6980216065.png" alt="Gemma Nolen" />
+            </div>
+            <div>
+              <div class="stars">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+              <p class="testimonial-card__name">Gemma Nolen</p>
+              <p class="testimonial-card__company">Google</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <p class="testimonial-card__quote">
+            "This is a template Figma file, turned into code using Anima.
+            Learn more at AnimaApp.com"
+          </p>
+          <div class="testimonial-card__client">
+            <div class="testimonial-card__avatar">
+              <img src="../figma-json/v3/images/e754ca731f89f5fd075dc47dcfd0ee6980216065.png" alt="Gemma Nolen" />
+            </div>
+            <div>
+              <div class="stars">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+              <p class="testimonial-card__name">Gemma Nolen</p>
+              <p class="testimonial-card__company">Google</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <p class="testimonial-card__quote">
+            "This is a template Figma file, turned into code using Anima.
+            Learn more at AnimaApp.com"
+          </p>
+          <div class="testimonial-card__client">
+            <div class="testimonial-card__avatar">
+              <img src="../figma-json/v3/images/e754ca731f89f5fd075dc47dcfd0ee6980216065.png" alt="Gemma Nolen" />
+            </div>
+            <div>
+              <div class="stars">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+              <p class="testimonial-card__name">Gemma Nolen</p>
+              <p class="testimonial-card__company">Google</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT SECTION
+       ============================================================ -->
+  <section class="contact-section" id="contact">
+    <div class="contact-section__inner">
+      <h2 class="contact-section__heading">Lets work together</h2>
+      <div class="contact-layout">
+
+        <div class="contact-info">
+          <p class="contact-info__desc">
+            This is a template Figma file, turned into code using Anima.
+            Learn more at AnimaApp.com
+          </p>
+          <div class="social-links">
+            <!-- Discord -->
+            <a href="#" class="social-link" aria-label="Discord">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.036.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03Z"/>
+              </svg>
+            </a>
+            <!-- Facebook -->
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
+            </a>
+            <!-- Dribbble -->
+            <a href="#" class="social-link" aria-label="Dribbble">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
+              </svg>
+            </a>
+            <!-- Instagram -->
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect width="20" height="20" x="2" y="2" rx="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+              </svg>
+            </a>
+            <!-- Behance -->
+            <a href="#" class="social-link" aria-label="Behance">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7.5 11.25h-3V7.5H7.5a1.875 1.875 0 0 1 0 3.75Zm0 1.5H4.5V17H7.5a2.25 2.25 0 0 0 0-4.25Zm6.75-4.5h4.5M14.25 12h4.5M16.5 7.5a2.25 2.25 0 0 0-2.25 2.25h4.5A2.25 2.25 0 0 0 16.5 7.5Z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <form class="contact-form" onsubmit="return false;">
+          <div class="contact-form__field">
+            <input class="form-input" type="text" placeholder="Name" aria-label="Name" />
+          </div>
+          <div class="contact-form__field">
+            <input class="form-input" type="email" placeholder="Email" aria-label="Email" />
+          </div>
+          <div class="contact-form__field">
+            <textarea class="form-input form-textarea" placeholder="Message" aria-label="Message"></textarea>
+          </div>
+          <button type="submit" class="btn btn--dark" style="align-self: flex-start;">Contact</button>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <span class="footer__logo">Logo</span>
+      <span class="footer__copy">© 2024 Visual Designer. All rights reserved.</span>
+      <nav class="footer__links">
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>
